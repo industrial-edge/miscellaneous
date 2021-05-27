@@ -49,11 +49,11 @@ This application example has been created with the following hardware and softwa
 
 | Component | Version | Note |
 | ----------- | ----------- | -------------- |
-| SIMATIC TIA Portal | V16 | Simulation of HMI included |
-| SIMATIC PLCSIM Advanced | V3.0 | Can be used for simulation of PLC |
-| Industrial Edge Management | - | See How To for used version |
-| Industrial Edge Device | - | See How To for used version |
-| Industrial Edge Apps | - | See How To for used versions |
+| SIMATIC TIA Portal | V16 | simulation of HMI included |
+| SIMATIC PLCSIM Advanced | V3.0 | can be used for simulation of PLC |
+| Industrial Edge Management | - | see specific How To |
+| Industrial Edge Device | - | see specific How To |
+| Industrial Edge Apps | - | see specific How To |
 
 ## Engineering
 
