@@ -1,13 +1,12 @@
 # Miscellaneous
 
-Here you can find different kind of source files. Each one is bundled in a separate directory within this repository.
+Here you can find different kind of projects and source files. Each one is bundled in a separate directory within this repository.
 
 - [Miscellaneous](#miscellaneous)
   - [Tank application](#tank-application)
 
 ## Tank application
 
-The source files can be found in the directory [tank application](https://github.com/industrial-edge/miscellaneous/tree/dev-branch/tank%20application).
+The tank application simulates a tank and filling process that is used as reference application for different How Tos within Industrial Edge.
 
-- [TIA portal project](https://github.com/industrial-edge/miscellaneous/blob/dev-branch/tank%20application/tia-tank-application.7z)
-- [Documentation](https://github.com/industrial-edge/miscellaneous/blob/dev-branch/tank%20application/README.md)
+The TIA portal project and the corresponding documentation can be found in the directory [tank application](https://github.com/industrial-edge/miscellaneous/tree/dev-branch/tank%20application).
