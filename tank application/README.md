@@ -42,6 +42,7 @@ The source files for the TIA project containing this tank application can be fou
 | Date | Note |
 | ----------- | -------------- |
 | May 20, 2021 | first version |
+| June 20, 2021 | changed parameter "process" (Int > DInt) |
 
 ### Used components
 
