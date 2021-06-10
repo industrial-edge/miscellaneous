@@ -221,6 +221,10 @@ Interface parameter:
 - *GDB.process.numberFaulty*
 - *GDB.operate.machineState*
 
+The parameter *GDB.operate.machineState* can have the following states:
+
+![Machine states](graphics/MachineStates.png)
+
 ### Performance insight - OEE Dashboard
 
 The related How To can be found [here](https://github.com/industrial-edge/Performance-Insight-OEE-Dashboard).
