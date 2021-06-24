@@ -20,6 +20,7 @@ This is the documentation for the TIA Portal project [tia-tank-application.7z](h
     - [Data service - Getting started](#data-service---getting-started)
     - [Notifier - Getting started](#notifier---getting-started)
     - [Performance insight - Getting started](#performance-insight---getting-started)
+    - [Performance insight - OEE Dashboard](#performance-insight---oee-dashboard)
     - [Energy manager - Getting started](#energy-manager---getting-started)
     - [Machine insight - Getting started](#machine-insight---getting-started)
     - [Profinet IO connector - Getting started](#profinet-io-connector---getting-started)
@@ -42,7 +43,8 @@ The source files for the TIA project containing this tank application can be fou
 | Date | Note |
 | ----------- | -------------- |
 | May 20, 2021 | first version |
-| June 20, 2021 | changed parameter "process" (Int > DInt) |
+| June 9, 2021 | changed parameter "process" (Int > DInt) |
+| June 10, 2021 | new state 'Error' in parameter 'machineState', changed UI |
 
 ### Used components
 
@@ -113,7 +115,11 @@ Reset is only possible, when the application is stopped (Button "Stop"). In this
 
 ![HMI](graphics/HMI.png)
 
-To simulate some faulty products, the process can be interrupted by clicking on the button “next bottle” during filling of a bottle. In this case the "Bottles faulty" number increases.
+To simulate some faulty products, the process can be interrupted by clicking on the button “Next bottle” during filling of a bottle. In this case the "Bottles faulty" number increases.
+
+By clicking the button "Push bottle", an error is simulated and the process stops. In this case the parameter *GDB.operate.machineState* is set to *STATE_ERROR* (7). The process can be started again, once the error was resolved. This can be done by clicking the button "Place bottle".
+
+![HMI error](graphics/Error.png)
 
 When clicking on the button "Energy data", some energy relevant values are displayed.
 
@@ -213,6 +219,20 @@ Interface parameter:
 - *GDB.signals.tankSignals.actTemperature*
 - *GDB.process.numberProduced*
 - *GDB.process.numberFaulty*
+- *GDB.operate.machineState*
+
+The parameter *GDB.operate.machineState* can have the following states:
+
+![Machine states](graphics/MachineStates.png)
+
+### Performance insight - OEE Dashboard
+
+The related How To can be found [here](https://github.com/industrial-edge/Performance-Insight-OEE-Dashboard).
+
+This example shows how to generate an OEE (Overall Equipment Effectiveness) Dashboard within the Performance Insight app. By defining key performance indicators, the productivity of a plant can be calculated and transparently displayed.
+
+Interface parameter:
+
 - *GDB.operate.machineState*
 
 ### Energy manager - Getting started
