@@ -11,7 +11,10 @@ This is the documentation for the TIA Portal project [tia-tank-application.7z](h
   - [Engineering](#engineering)
     - [Mode of operation](#mode-of-operation)
     - [Interface DB](#interface-db)
-  - [HMI](#hmi)
+  - [Operation of PLC](#operation-of-plc)
+    - [Operation via HMI](#operation-via-hmi)
+    - [Manual operation (intern)](#manual-operation-intern)
+    - [Operation via Edge apps (extern)](#operation-via-edge-apps-extern)
   - [Edge use cases](#edge-use-cases)
     - [QR-Code scanner](#qr-code-scanner)
     - [Archiving and visualization](#archiving-and-visualization)
@@ -45,6 +48,7 @@ The source files for the TIA project containing this tank application can be fou
 | May 20, 2021 | first version |
 | June 9, 2021 | changed parameter "process" (Int > DInt) |
 | June 10, 2021 | new state 'Error' in parameter 'machineState', changed UI |
+| July 1, 2021 | added options for operating the PLC |
 
 ### Used components
 
@@ -60,17 +64,26 @@ This application example has been created with the following hardware and softwa
 
 ## Engineering
 
-The TIA portal project consists of a CPU 1518 ODK and a corresponding HMI. The application also runs on every other PLC, e.g. CPU 1511.
+The TIA portal project consists of a CPU 1518 ODK and a corresponding HMI.
+
+The CPU contains the engineering program for the whole tank application. It also runs on every other S7-1500 PLC, e.g. CPU 1511. Alternatively the PLC can be simulated via PlcSim Advanced.
 
 ![TIA Overview](graphics/TIA_Overview.png)
-
-The CPU contains the engineering program for the whole tank application, that can be controlled via the HMI. Alternatively, the tank application can be controlled via the Industrial Edge apps by triggering the corresponding parameters.
 
 ### Mode of operation
 
 The application works as following:
 
 ![Operation](graphics/operation.png)
+
+Once the application is started, it runs through the different operating states and delivers important process values that can be used for further processing within industrial edge.
+As soon as the tank is empty, the tank filling process starts again to ensure an endless sequence.
+
+"Next bottle" is shifting the current bottle to simulate a not completely filled bottle. In this case the parameter *GDB.process.numberFaulty* is increased.
+
+"Stop" pauses the whole filling process. It can be continued with the "Start" action.
+
+"Reset" resets all process values. This is only possible, when the application is stopped.
 
 ### Interface DB
 
@@ -106,12 +119,19 @@ Parameter "appSignals"
 
 ![GDB parameter appSignals](graphics/GDB_parameter_appSignals.png)
 
-## HMI
+## Operation of PLC
 
-The tank application can be controlled via the embedded HMI. Here the process can be started, stopped, and reset.
-The application runs through the different operating states and delivers important process values that can be used for further processing within industrial edge.
-As soon as the tank is empty, the tank filling process starts again to ensure an endless sequence.
-Reset is only possible, when the application is stopped (Button "Stop"). In this case all process values are reset.
+The tank application can be controlled as following:
+
+- via the included HMI
+- manually in the global DB “GDB” (from intern)
+- via Edge apps (from extern)
+
+### Operation via HMI
+
+The included HMI can be simulated within the TIA Portal. Here the filling process can be started, stopped, and reset in an user-friendly way. It also visualizes the whole filling process. The HMI can be connected to a real PLC or to PlcSim Advanced, to get the process data.
+
+> **NOTE:**  Please make sure your PG/PC interfaces settings are configured properly.
 
 ![HMI](graphics/HMI.png)
 
@@ -124,6 +144,24 @@ By clicking the button "Push bottle", an error is simulated and the process stop
 When clicking on the button "Energy data", some energy relevant values are displayed.
 
 ![HMI energy](graphics/HMI_Energy.png)
+
+### Manual operation (intern)
+
+The tank application can be controlled manually in the global DB “GDB". Therefore the following parameters must be triggered (set to true, set to false):
+
+- *GDB.hmiSignals.HMI_Start*
+- *GDB.hmiSignals.HMI_Stop*
+- *GDB.hmiSignals.HMI_Reset* (only possible, when the application is stopped)
+
+![Manual operation](graphics/ManualOperation.png)
+
+### Operation via Edge Apps (extern)
+
+The tank application can be controlled via self developed Edge apps. Therefore the following parameters must be triggered:
+
+- *GDB.appSignals.APP_Start*
+- *GDB.appSignals.APP_Stop*
+- *GDB.appSignals.APP_Reset* (only possible, when the application is stopped)
 
 ## Edge use cases
 
