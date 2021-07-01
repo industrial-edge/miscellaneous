@@ -27,6 +27,7 @@ This is the documentation for the TIA Portal project [tia-tank-application.7z](h
     - [Energy manager - Getting started](#energy-manager---getting-started)
     - [Machine insight - Getting started](#machine-insight---getting-started)
     - [Profinet IO connector - Getting started](#profinet-io-connector---getting-started)
+    - [Apache Kafka Connector](#apache-kafka-connector)
   - [Contribution](#contribution)
 
 ## Introduction
@@ -48,7 +49,7 @@ The source files for the TIA project containing this tank application can be fou
 | May 20, 2021 | first version |
 | June 9, 2021 | changed parameter "process" (Int > DInt) |
 | June 10, 2021 | new state 'Error' in parameter 'machineState', changed UI |
-| July 1, 2021 | added options for operating the PLC |
+| July 1, 2021 | added options for operating the PLC, added use case |
 
 ### Used components
 
@@ -297,6 +298,12 @@ This example shows how to use the Industrial Edge App “Machine Insight”. Mac
 The related How To can be found [here](https://github.com/industrial-edge/profinet-io-connector-getting-started).
 
 This example shows how to use the Industrial Edge App “PROFINET IO Connector”. This app implements a PROFINET Controller which cyclically reads the PN IO data of the configured PROFINET network.
+
+### Apache Kafka Connector
+
+The related How To can be found [here](https://github.com/industrial-edge/Apache-Kafka-Connector).
+
+This example shows how to connect an Industrial Edge Device to Apache Kafka using the self developed app "Apache Kafka Connector". It can subscribe to MQTT topics on the IE Databus and produce messages on a Kafka topic. It can also consume messages from a Kafka topic and publish these to MQTT topics an the IE Databus.
 
 ## Contribution
 
