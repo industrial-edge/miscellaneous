@@ -45,11 +45,12 @@ The source files for the TIA project containing this tank application can be fou
 ### History
 
 | Date | Note |
-| ----------- | -------------- |
-| May 20, 2021 | first version |
-| June 9, 2021 | changed parameter "process" (Int > DInt) |
-| June 10, 2021 | new state 'Error' in parameter 'machineState', changed UI |
-| July 1, 2021 | added options for operating the PLC, added use case |
+| -----------------| -------------- |
+| May 20, 2021     | first version |
+| June 9, 2021     | changed parameter "process" (Int > DInt) |
+| June 10, 2021    | new state 'Error' in parameter 'machineState', changed HMI |
+| July 8, 2021     | changed parameter "process" (UDInt), added overflow handling, changed HMI|
+|                  | docu: added options for operating the PLC, added use case|
 
 ### Used components
 
@@ -77,8 +78,7 @@ The application works as following:
 
 ![Operation](graphics/operation.png)
 
-Once the application is started, it runs through the different operating states and delivers important process values that can be used for further processing within industrial edge.
-As soon as the tank is empty, the tank filling process starts again to ensure an endless sequence.
+Once the application is started, it runs through the different operating states and delivers important process values that can be used for further processing within industrial edge. As soon as the tank is empty, the tank filling process starts again to ensure an endless sequence. When the maximum value of the parameter *GDB.process.numberProduced* is reached, the application goes into stop, then reset and starts again from the beginning to avoid an overflow.
 
 "Next bottle" is shifting the current bottle to simulate a not completely filled bottle. In this case the parameter *GDB.process.numberFaulty* is increased.
 
