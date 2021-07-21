@@ -34,7 +34,7 @@ This is the documentation for the TIA Portal project [tia-tank-application.7z](h
 
 ### Overview
 
-This application is used within various use cases to demonstrate the industrial edge functionality and apps. It is based on a STEP 7 TIA project with corresponding HMI. The application simulates the filling process from a tank into bottles. The necessary simulation models for the tank and the bottles are embedded.
+This application is used within various use cases to demonstrate the Industrial Edge functionality and apps. It is based on a STEP 7 TIA project with corresponding HMI. The application simulates the filling process from a tank into bottles. The necessary simulation models for the tank and the bottles are embedded.
 
 ![Overview](graphics/overview.png)
 
@@ -78,7 +78,7 @@ The application works as following:
 
 ![Operation](graphics/operation.png)
 
-Once the application is started, it runs through the different operating states and delivers important process values that can be used for further processing within industrial edge. As soon as the tank is empty, the tank filling process starts again to ensure an endless sequence. When the maximum value of the parameter *GDB.process.numberProduced* is reached, the application goes into stop, then reset and starts again from the beginning to avoid an overflow.
+Once the application is started, it runs through the different operating states and delivers important process values that can be used for further processing within Industrial Edge. As soon as the tank is empty, the tank filling process starts again to ensure an endless sequence. When the maximum value of the parameter *GDB.process.numberProduced* is reached, the application goes into stop, then reset and starts again from the beginning to avoid an overflow.
 
 "Next bottle" is shifting the current bottle to simulate a not completely filled bottle. In this case the parameter *GDB.process.numberFaulty* is increased.
 
