@@ -34,13 +34,13 @@ This is the documentation for the TIA Portal project [tia-tank-application.7z](h
 
 ### Overview
 
-This application is used within various use cases to demonstrate the Industrial Edge functionality and apps. It is based on a STEP 7 TIA project with corresponding HMI. The application simulates the filling process from a tank into bottles. The necessary simulation models for the tank and the bottles are embedded.
+This application is used within various use cases to demonstrate the Industrial Edge functionality and apps. It is based on a TIA Portal project with corresponding HMI. The application simulates the filling process from a tank into bottles. The necessary simulation models for the tank and the bottles are embedded.
 
 ![Overview](graphics/overview.png)
 
 ### Source files
 
-The source files for the TIA project containing this tank application can be found [here](https://github.com/industrial-edge/miscellaneous/blob/main/tank%20application/tia-tank-application.7z)
+The source files for the TIA Portal project containing this tank application can be found [here](https://github.com/industrial-edge/miscellaneous/blob/main/tank%20application/tia-tank-application.7z)
 
 ### History
 
@@ -66,7 +66,7 @@ This application example has been created with the following hardware and softwa
 
 ## Engineering
 
-The TIA portal project consists of a CPU 1518 ODK and a corresponding HMI.
+The TIA Portal project consists of a CPU 1518 ODK and a corresponding HMI.
 
 The CPU contains the engineering program for the whole tank application. It also runs on every other S7-1500 PLC, e.g. CPU 1511. Alternatively the PLC can be simulated via PlcSim Advanced.
 
@@ -88,7 +88,7 @@ Once the application is started, it runs through the different operating states 
 
 ### Interface DB
 
-The data exchange between the TIA portal project and the Industrial Edge apps is done via the global DB “GDB”. This DB is set to ‘not optimized’, to be able to work with the offsets.
+The data exchange between the TIA Portal project and the Industrial Edge apps is done via the global DB “GDB”. This DB is set to ‘not optimized’, to be able to work with the offsets.
 
 ![GDB Overview](graphics/GDB_Overview.png)
 
@@ -206,7 +206,7 @@ Interface parameter:
 - *GDB.appSignals.APP_Stop*
 - *GDB.appSignals.APP_Reset*
 
-TIA project code, where the operating commands are handled:
+TIA Portal code, where the operating commands are handled:
 
 ![Sequence Network](graphics/SequenceNetwork.png)
 
