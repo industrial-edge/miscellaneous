@@ -1,6 +1,6 @@
 # Tank Application
 
-This is the documentation for the TIA Portal project [tia-tank-application.7z](https://github.com/industrial-edge/miscellaneous/blob/main/tank%20application/tia-tank-application.7z). The project simulates a tank and filling process that is used as reference application for different How Tos within Industrial Edge.
+This is the documentation for the TIA Portal project [tia-tank-application.zip](tia-tank-application.zip). The project simulates a tank and filling process that is used as reference application for different How Tos within Industrial Edge.
 
 - [Tank Application](#tank-application)
   - [Introduction](#introduction)
@@ -11,7 +11,10 @@ This is the documentation for the TIA Portal project [tia-tank-application.7z](h
   - [Engineering](#engineering)
     - [Mode of operation](#mode-of-operation)
     - [Interface DB](#interface-db)
-  - [HMI](#hmi)
+  - [Operation of PLC](#operation-of-plc)
+    - [Operation via HMI](#operation-via-hmi)
+    - [Manual operation (intern)](#manual-operation-intern)
+    - [Operation via Edge apps (extern)](#operation-via-edge-apps-extern)
   - [Edge use cases](#edge-use-cases)
     - [QR-Code scanner](#qr-code-scanner)
     - [Archiving and visualization](#archiving-and-visualization)
@@ -24,27 +27,30 @@ This is the documentation for the TIA Portal project [tia-tank-application.7z](h
     - [Energy manager - Getting started](#energy-manager---getting-started)
     - [Machine insight - Getting started](#machine-insight---getting-started)
     - [Profinet IO connector - Getting started](#profinet-io-connector---getting-started)
+    - [Apache Kafka Connector](#apache-kafka-connector)
   - [Contribution](#contribution)
 
 ## Introduction
 
 ### Overview
 
-This application is used within various use cases to demonstrate the industrial edge functionality and apps. It is based on a STEP 7 TIA project with corresponding HMI. The application simulates the filling process from a tank into bottles. The necessary simulation models for the tank and the bottles are embedded.
+This application is used within various use cases to demonstrate the Industrial Edge functionality and apps. It is based on a TIA Portal project with corresponding HMI. The application simulates the filling process from a tank into bottles. The necessary simulation models for the tank and the bottles are embedded.
 
 ![Overview](graphics/overview.png)
 
 ### Source files
 
-The source files for the TIA project containing this tank application can be found [here](https://github.com/industrial-edge/miscellaneous/blob/main/tank%20application/tia-tank-application.7z)
+The source files for the TIA Portal project containing this tank application can be found [here](https://github.com/industrial-edge/miscellaneous/blob/main/tank%20application/tia-tank-application.7z)
 
 ### History
 
 | Date | Note |
-| ----------- | -------------- |
-| May 20, 2021 | first version |
-| June 9, 2021 | changed parameter "process" (Int > DInt) |
-| June 10, 2021 | new state 'Error' in parameter 'machineState', changed UI |
+| -----------------| -------------- |
+| May 20, 2021     | first version |
+| June 9, 2021     | changed parameter "process" (Int > DInt) |
+| June 10, 2021    | new state 'Error' in parameter 'machineState', changed HMI |
+| July 8, 2021     | changed parameter "process" (UDInt), added overflow handling, changed HMI|
+|                  | docu: added options for operating the PLC, added use case|
 
 ### Used components
 
@@ -60,11 +66,11 @@ This application example has been created with the following hardware and softwa
 
 ## Engineering
 
-The TIA portal project consists of a CPU 1518 ODK and a corresponding HMI. The application also runs on every other PLC, e.g. CPU 1511.
+The TIA Portal project consists of a CPU 1518 ODK and a corresponding HMI.
+
+The CPU contains the engineering program for the whole tank application. It also runs on every other S7-1500 PLC, e.g. CPU 1511. Alternatively the PLC can be simulated via PlcSim Advanced.
 
 ![TIA Overview](graphics/TIA_Overview.png)
-
-The CPU contains the engineering program for the whole tank application, that can be controlled via the HMI. Alternatively, the tank application can be controlled via the Industrial Edge apps by triggering the corresponding parameters.
 
 ### Mode of operation
 
@@ -72,9 +78,17 @@ The application works as following:
 
 ![Operation](graphics/operation.png)
 
+Once the application is started, it runs through the different operating states and delivers important process values that can be used for further processing within Industrial Edge. As soon as the tank is empty, the tank filling process starts again to ensure an endless sequence. When the maximum value of the parameter *GDB.process.numberProduced* is reached, the application goes into stop, then reset and starts again from the beginning to avoid an overflow.
+
+"Next bottle" is shifting the current bottle to simulate a not completely filled bottle. In this case the parameter *GDB.process.numberFaulty* is increased.
+
+"Stop" pauses the whole filling process. It can be continued with the "Start" action.
+
+"Reset" resets all process values. This is only possible, when the application is stopped.
+
 ### Interface DB
 
-The data exchange between the TIA portal project and the Industrial Edge apps is done via the global DB “GDB”. This DB is set to ‘not optimized’, to be able to work with the offsets.
+The data exchange between the TIA Portal project and the Industrial Edge apps is done via the global DB “GDB”. This DB is set to ‘not optimized’, to be able to work with the offsets.
 
 ![GDB Overview](graphics/GDB_Overview.png)
 
@@ -106,12 +120,19 @@ Parameter "appSignals"
 
 ![GDB parameter appSignals](graphics/GDB_parameter_appSignals.png)
 
-## HMI
+## Operation of PLC
 
-The tank application can be controlled via the embedded HMI. Here the process can be started, stopped, and reset.
-The application runs through the different operating states and delivers important process values that can be used for further processing within industrial edge.
-As soon as the tank is empty, the tank filling process starts again to ensure an endless sequence.
-Reset is only possible, when the application is stopped (Button "Stop"). In this case all process values are reset.
+The tank application can be controlled as following:
+
+- via the included HMI
+- manually in the global DB “GDB” (from intern)
+- via Edge apps (from extern)
+
+### Operation via HMI
+
+The included HMI can be simulated within the TIA Portal. Here the filling process can be started, stopped, and reset in an user-friendly way. It also visualizes the whole filling process. The HMI can be connected to a real PLC or to PlcSim Advanced, to get the process data.
+
+> **NOTE:**  Please make sure your PG/PC interfaces settings are configured properly.
 
 ![HMI](graphics/HMI.png)
 
@@ -124,6 +145,24 @@ By clicking the button "Push bottle", an error is simulated and the process stop
 When clicking on the button "Energy data", some energy relevant values are displayed.
 
 ![HMI energy](graphics/HMI_Energy.png)
+
+### Manual operation (intern)
+
+The tank application can be controlled manually in the global DB “GDB". Therefore the following parameters must be triggered (set to true, set to false):
+
+- *GDB.hmiSignals.HMI_Start*
+- *GDB.hmiSignals.HMI_Stop*
+- *GDB.hmiSignals.HMI_Reset* (only possible, when the application is stopped)
+
+![Manual operation](graphics/ManualOperation.png)
+
+### Operation via Edge Apps (extern)
+
+The tank application can be controlled via self developed Edge apps. Therefore the following parameters must be triggered:
+
+- *GDB.appSignals.APP_Start*
+- *GDB.appSignals.APP_Stop*
+- *GDB.appSignals.APP_Reset* (only possible, when the application is stopped)
 
 ## Edge use cases
 
@@ -167,7 +206,7 @@ Interface parameter:
 - *GDB.appSignals.APP_Stop*
 - *GDB.appSignals.APP_Reset*
 
-TIA project code, where the operating commands are handled:
+TIA Portal code, where the operating commands are handled:
 
 ![Sequence Network](graphics/SequenceNetwork.png)
 
@@ -259,6 +298,12 @@ This example shows how to use the Industrial Edge App “Machine Insight”. Mac
 The related How To can be found [here](https://github.com/industrial-edge/profinet-io-connector-getting-started).
 
 This example shows how to use the Industrial Edge App “PROFINET IO Connector”. This app implements a PROFINET Controller which cyclically reads the PN IO data of the configured PROFINET network.
+
+### Apache Kafka Connector
+
+The related How To can be found [here](https://github.com/industrial-edge/Apache-Kafka-Connector).
+
+This example shows how to connect an Industrial Edge Device to Apache Kafka using the self developed app "Apache Kafka Connector". It can subscribe to MQTT topics on the IE Databus and produce messages on a Kafka topic. It can also consume messages from a Kafka topic and publish these to MQTT topics an the IE Databus.
 
 ## Contribution
 
