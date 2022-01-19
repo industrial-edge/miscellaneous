@@ -1,6 +1,8 @@
 # Tank Application
 
-This is the documentation for the TIA Portal project [tia-tank-application.zip](tia-tank-application.zip). The project simulates a tank and filling process that is used as reference application for different How Tos within Industrial Edge.
+This is the documentation for the TIA Portal project "tank application", which simulates a tank and filling process that is used as reference application for different How Tos within Industrial Edge.
+
+The project can be found [here](tia-tank-application.zap16) as ZAP16 file (TIA compressed project) and can be opened directly in the TIA Portal V16 or higher.
 
 - [Tank Application](#tank-application)
   - [Introduction](#introduction)
@@ -49,8 +51,9 @@ The source files for the TIA Portal project containing this tank application can
 | May 20, 2021     | first version |
 | June 9, 2021     | changed parameter "process" (Int > DInt) |
 | June 10, 2021    | new state 'Error' in parameter 'machineState', changed HMI |
-| July 8, 2021     | changed parameter "process" (UDInt), added overflow handling, changed HMI|
-|                  | docu: added options for operating the PLC, added use case|
+| July 8, 2021     | changed parameter "process" (UDInt), added overflow handling, changed HMI |
+|                  | docu: added options for operating the PLC, added use case |
+| Jan 19, 2022     | changed used PLC to CPU 1513-1 ,changed unity of energy data to Wh, changed TIA project from .zip to .zap16 |
 
 ### Used components
 
@@ -66,9 +69,9 @@ This application example has been created with the following hardware and softwa
 
 ## Engineering
 
-The TIA Portal project consists of a CPU 1518 ODK and a corresponding HMI.
+The TIA Portal project consists of a CPU 1513-1 and a corresponding HMI.
 
-The CPU contains the engineering program for the whole tank application. It also runs on every other S7-1500 PLC, e.g. CPU 1511. Alternatively the PLC can be simulated via PlcSim Advanced.
+The CPU contains the engineering program for the whole tank application. It also runs on every other S7-1500 PLC. Alternatively the PLC can be simulated via PlcSim Advanced.
 
 ![TIA Overview](graphics/TIA_Overview.png)
 
