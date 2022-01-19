@@ -2,8 +2,6 @@
 
 This is the documentation for the TIA Portal project "tank application", which simulates a tank and filling process that is used as reference application for different How Tos within Industrial Edge.
 
-The project can be found [here](tia-tank-application.zap16) as ZAP16 file (TIA compressed project) and can be opened directly in the TIA Portal V16 or higher.
-
 - [Tank Application](#tank-application)
   - [Introduction](#introduction)
     - [Overview](#overview)
@@ -30,6 +28,8 @@ The project can be found [here](tia-tank-application.zap16) as ZAP16 file (TIA c
     - [Machine insight - Getting started](#machine-insight---getting-started)
     - [Profinet IO connector - Getting started](#profinet-io-connector---getting-started)
     - [Apache Kafka Connector](#apache-kafka-connector)
+    - [Data concentrator with Data Service](data-concentrator-with-data-service)
+    - [Notifier API](notifier-api)
   - [Contribution](#contribution)
 
 ## Introduction
@@ -42,7 +42,7 @@ This application is used within various use cases to demonstrate the Industrial 
 
 ### Source files
 
-The source files for the TIA Portal project containing this tank application can be found [here](https://github.com/industrial-edge/miscellaneous/blob/main/tank%20application/tia-tank-application.7z)
+The TIA Portal project can be found [here](tia-tank-application.zap16) as ZAP16 file (TIA compressed project) and can be opened directly in the TIA Portal V16 or higher.
 
 ### History
 
@@ -53,7 +53,7 @@ The source files for the TIA Portal project containing this tank application can
 | June 10, 2021    | new state 'Error' in parameter 'machineState', changed HMI |
 | July 8, 2021     | changed parameter "process" (UDInt), added overflow handling, changed HMI |
 |                  | docu: added options for operating the PLC, added use case |
-| Jan 19, 2022     | changed used PLC to CPU 1513-1 ,changed unity of energy data to Wh, changed TIA project from .zip to .zap16 |
+| Jan 19, 2022     | changed PLC to CPU 1513-1 ,changed unity of energy data to Wh, changed TIA project from .zip to .zap16, added new use cases |
 
 ### Used components
 
@@ -307,6 +307,18 @@ This example shows how to use the Industrial Edge App â€œPROFINET IO Connectorâ€
 The related How To can be found [here](https://github.com/industrial-edge/Apache-Kafka-Connector).
 
 This example shows how to connect an Industrial Edge Device to Apache Kafka using the self developed app "Apache Kafka Connector". It can subscribe to MQTT topics on the IE Databus and produce messages on a Kafka topic. It can also consume messages from a Kafka topic and publish these to MQTT topics an the IE Databus.
+
+### Data concentrator with Data Service
+
+The related How To can be found [here](https://github.com/industrial-edge/data-concentrator-data-service).
+
+This example shows how to centrally send data from the field level (several edge devices) to a higher-level edge device. Therefore two edge devices forward their data via the Cloud Connector (local lake) to a higher-level edge decice. This central edge device uses the Data Service custom adapters to collect the data from the field level and analyze it via Performance Insight.
+
+### Notifier API
+
+The related How To can be found [here](https://github.com/industrial-edge/notifier-api).
+
+This guide shows how to use the Notifier OpenAPI in different ways. The API is implemented within an user-developed app to send notifications to the Notifier.
 
 ## Contribution
 
