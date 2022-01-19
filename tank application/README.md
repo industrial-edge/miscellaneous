@@ -28,8 +28,8 @@ This is the documentation for the TIA Portal project "tank application", which s
     - [Machine insight - Getting started](#machine-insight---getting-started)
     - [Profinet IO connector - Getting started](#profinet-io-connector---getting-started)
     - [Apache Kafka Connector](#apache-kafka-connector)
-    - [Data concentrator with Data Service](data-concentrator-with-data-service)
-    - [Notifier API](notifier-api)
+    - [Data concentrator with Data Service](#data-concentrator-with-data-service)
+    - [Notifier API](#notifier-api)
   - [Contribution](#contribution)
 
 ## Introduction
