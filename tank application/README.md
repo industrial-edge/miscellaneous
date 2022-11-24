@@ -52,8 +52,7 @@ The TIA Portal project can be found [here](tia-tank-application.zap16) as ZAP16 
 | 2021-05-20  | first version  |
 | 2021-06-09  | changed parameter "process" (Int > DInt) |
 | 2021-06-10  | new state 'Error' in parameter 'machineState', changed HMI |
-| 2021-07-08  | changed parameter "process" (UDInt), added overflow handling, changed HMI |
-|             | docu: added options for operating the PLC, added use case |
+| 2021-07-08  | changed parameter "process" (UDInt), added overflow handling, changed HMI<br>docu: added options for operating the PLC, added use case |
 | 2022-01-19  | changed PLC to CPU 1513-1, changed unity of energy data to Wh,<br>changed TIA project from .zip to .zap16, added new use cases |
 | 2022-11-24  | automatic start of filling process, automatic value generation for 'faulty bottles',<br>embedded program alarm for testing |
 
