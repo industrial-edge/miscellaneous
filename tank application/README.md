@@ -15,6 +15,7 @@ This is the documentation for the TIA Portal project "tank application", which s
     - [Operation via HMI](#operation-via-hmi)
     - [Manual operation (intern)](#manual-operation-intern)
     - [Operation via Edge apps (extern)](#operation-via-edge-apps-extern)
+    - [Program alarm](#program-alarm)
   - [Edge use cases](#edge-use-cases)
     - [QR-Code scanner](#qr-code-scanner)
     - [Archiving and visualization](#archiving-and-visualization)
@@ -46,21 +47,21 @@ The TIA Portal project can be found [here](tia-tank-application.zap16) as ZAP16 
 
 ### History
 
-| Date | Note |
-| -----------------| -------------- |
-| May 20, 2021     | first version |
-| June 9, 2021     | changed parameter "process" (Int > DInt) |
-| June 10, 2021    | new state 'Error' in parameter 'machineState', changed HMI |
-| July 8, 2021     | changed parameter "process" (UDInt), added overflow handling, changed HMI |
-|                  | docu: added options for operating the PLC, added use case |
-| Jan 19, 2022     | changed PLC to CPU 1513-1 ,changed unity of energy data to Wh, changed TIA project from .zip to .zap16, added new use cases |
+| Date        | Note           |
+| ------------| -------------- |
+| 2021-05-20  | first version  |
+| 2021-06-09  | changed parameter "process" (Int > DInt) |
+| 2021-06-10  | new state 'Error' in parameter 'machineState', changed HMI |
+| 2021-07-08  | changed parameter "process" (UDInt), added overflow handling, changed HMI<br>docu: added options for operating the PLC, added use case |
+| 2022-01-19  | changed PLC to CPU 1513-1, changed unity of energy data to Wh,<br>changed TIA project from .zip to .zap16, added new use cases |
+| 2022-11-24  | automatic start of filling process, automatic value generation for 'faulty bottles',<br>embedded program alarm for testing |
 
 ### Used components
 
 This application example has been created with the following hardware and software components:
 
 | Component | Version | Note |
-| ----------- | ----------- | -------------- |
+| --------- | ------- | ---- |
 | SIMATIC TIA Portal | V16 | simulation of HMI included |
 | SIMATIC PLCSIM Advanced | V3.0 | can be used for simulation of PLC |
 | Industrial Edge Management | - | see specific How To |
@@ -166,6 +167,12 @@ The tank application can be controlled via self developed Edge apps. Therefore t
 - *GDB.appSignals.APP_Start*
 - *GDB.appSignals.APP_Stop*
 - *GDB.appSignals.APP_Reset* (only possible, when the application is stopped)
+
+### Program alarm
+
+The tank application offers the possibility to simulate a program alarm for testing purposes. Therefore the parameter *GDB.appSignals.APP_Alarm* acts as trigger. As long as this parameter is set to TRUE, the program alarm "This is a program alarm (test)" is active. The alarm status is written in the parameter *GDB.signals.alarm*. This active alarm is also visualised in the HMI, where the alarm table can be opened.
+
+![Alarm](graphics/Alarm.png)
 
 ## Edge use cases
 
