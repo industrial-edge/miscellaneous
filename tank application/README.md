@@ -186,7 +186,6 @@ The tank application can be controlled via self developed Edge apps. Therefore t
 TIA Portal code, where the operating commands are handled:
 
 ![Sequence Network](graphics/SequenceNetwork.png)
-![Sequence Network](graphics/SequenceNetwork2.png)
 
 ### Program alarm
 
