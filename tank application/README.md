@@ -55,6 +55,7 @@ The TIA Portal project can be found [here](tia-tank-application.zap16) as ZAP16 
 | 2021-07-08  | changed parameter "process" (UDInt), added overflow handling, changed HMI<br>docu: added options for operating the PLC, added use case |
 | 2022-01-19  | changed PLC to CPU 1513-1, changed unity of energy data to Wh,<br>changed TIA project from .zip to .zap16, added new use cases |
 | 2022-11-24  | automatic start of filling process, automatic value generation for 'faulty bottles',<br>embedded program alarm for testing |
+| 2023-04-20  | added new parameter for batchId, TIA projectInfo and gasConsumption |
 
 ### Used components
 
@@ -124,6 +125,10 @@ Parameter "appSignals"
 
 ![GDB parameter appSignals](graphics/GDB_parameter_appSignals.png)
 
+Parameter "projectInfo"
+
+![GDB parameter projectInfo](graphics/GDB_parameter_projectInfo.png)
+
 ## Operation of PLC
 
 The tank application can be controlled as following:
@@ -152,7 +157,7 @@ When clicking on the button "Energy data", some energy relevant values are displ
 
 ### Manual operation (intern)
 
-The tank application can be controlled manually in the global DB “GDB". Therefore the following parameters must be triggered (set to true, set to false):
+The tank application can be controlled manually in the global DB “GDB". Therefore the following parameter must be set to 'true' (right after these parameter are reset automatically to 'false'):
 
 - *GDB.hmiSignals.HMI_Start*
 - *GDB.hmiSignals.HMI_Stop*
@@ -160,13 +165,29 @@ The tank application can be controlled manually in the global DB “GDB". Theref
 
 ![Manual operation](graphics/ManualOperation.png)
 
+To simulate some faulty products, the process can be interrupted by setting this parameter to 'true' during filling of a bottle. In this case the "Bottles faulty" number increases:
+
+- *GDB.hmiSignals.HMI_NextBottle*
+
+By setting this parameter to 'true', an error is simulated and the process stops. In this case the parameter *GDB.operate.machineState* is set to *STATE_ERROR* (7). The process can be started again, once the paramter was reset to 'false':
+
+- *GDB.hmiSignals.HMI_Error*
+
 ### Operation via Edge Apps (extern)
 
-The tank application can be controlled via self developed Edge apps. Therefore the following parameters must be triggered:
+The tank application can be controlled via self developed Edge apps. Therefore the following parameters must be triggered (accordingly to the explanation under chapter [Manual operation](#manual-operation-intern)):
 
 - *GDB.appSignals.APP_Start*
 - *GDB.appSignals.APP_Stop*
 - *GDB.appSignals.APP_Reset* (only possible, when the application is stopped)
+- *GDB.hmiSignals.APP_NextBottle*
+- *GDB.hmiSignals.APP_Error*
+
+TIA Portal code, where the operating commands are handled:
+
+![Sequence Network](graphics/SequenceNetwork.png)
+
+![Sequence Network](graphics/SequenceNetwork2.png)
 
 ### Program alarm
 
@@ -215,10 +236,6 @@ Interface parameter:
 - *GDB.appSignals.APP_Start*
 - *GDB.appSignals.APP_Stop*
 - *GDB.appSignals.APP_Reset*
-
-TIA Portal code, where the operating commands are handled:
-
-![Sequence Network](graphics/SequenceNetwork.png)
 
 ### IoT gateway
 
