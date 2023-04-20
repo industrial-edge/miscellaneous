@@ -165,11 +165,11 @@ The tank application can be controlled manually in the global DB “GDB". Theref
 
 ![Manual operation](graphics/ManualOperation.png)
 
-To simulate some faulty products, the process can be interrupted by setting this parameter to 'true' during filling of a bottle. In this case the "Bottles faulty" number increases:
+To simulate some faulty products and increase the number of "bottles faulty", the process can be interrupted by setting this parameter to 'true' during filling of a bottle (right after the parameter is reset automatically to 'false'):
 
 - *GDB.hmiSignals.HMI_NextBottle*
 
-By setting this parameter to 'true', an error is simulated and the process stops. In this case the parameter *GDB.operate.machineState* is set to *STATE_ERROR* (7). The process can be started again, once the paramter was reset to 'false':
+It is also possible to simulate an error, which stops the whole filling process. In this case the parameter *GDB.operate.machineState* is set to *STATE_ERROR* (7). Therefore this parameter must be set to 'true'. The process can be started again, once the paramter was reset to 'false':
 
 - *GDB.hmiSignals.HMI_Error*
 
