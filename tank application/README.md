@@ -47,14 +47,15 @@ The TIA Portal project can be found [here](tia-tank-application.zap16) as ZAP16 
 
 ### History
 
-| Date        | Note           |
-| ------------| -------------- |
-| 2021-05-20  | first version  |
-| 2021-06-09  | changed parameter "process" (Int > DInt) |
-| 2021-06-10  | new state 'Error' in parameter 'machineState', changed HMI |
-| 2021-07-08  | changed parameter "process" (UDInt), added overflow handling, changed HMI<br>docu: added options for operating the PLC, added use case |
-| 2022-01-19  | changed PLC to CPU 1513-1, changed unity of energy data to Wh,<br>changed TIA project from .zip to .zap16, added new use cases |
-| 2022-11-24  | automatic start of filling process, automatic value generation for 'faulty bottles',<br>embedded program alarm for testing |
+| Date        | Version | Note           |
+| ------------| ------- | -------------- |
+| 2021-05-20  |         | first version  |
+| 2021-06-09  |         | changed parameter "process" (Int > DInt) |
+| 2021-06-10  |         | new state 'Error' in parameter 'machineState', changed HMI |
+| 2021-07-08  |         | changed parameter "process" (UDInt), added overflow handling, changed HMI<br>docu: added options for operating the PLC, added use case |
+| 2022-01-19  |         | changed PLC to CPU 1513-1, changed unity of energy data to Wh,<br>changed TIA project from .zip to .zap16, added new use cases |
+| 2022-11-24  |         | automatic start of filling process, automatic value generation for 'faulty bottles',<br>embedded program alarm for testing |
+| 2023-04-20  | V1.0 | added new parameter for batchId, TIA projectInfo and gasConsumption |
 
 ### Used components
 
@@ -82,7 +83,7 @@ The application works as following:
 
 ![Operation](graphics/operation.png)
 
-Once the application is started, it runs through the different operating states and delivers important process values that can be used for further processing within Industrial Edge. As soon as the tank is empty, the tank filling process starts again to ensure an endless sequence. When the maximum value of the parameter *GDB.process.numberProduced* is reached, the application goes into stop, then reset and starts again from the beginning to avoid an overflow.
+Once the application is started, it runs through the different operating states and delivers important process values that can be used for further processing within Industrial Edge. As soon as the tank is empty, the tank filling process starts again (also represent by the paramter *GDB.process.batchId*) to ensure an endless sequence. When the maximum value of the parameter *GDB.process.numberProduced* is reached, the application goes into stop, then reset and starts again from the beginning to avoid an overflow.
 
 "Next bottle" is shifting the current bottle to simulate a not completely filled bottle. In this case the parameter *GDB.process.numberFaulty* is increased.
 
@@ -124,6 +125,10 @@ Parameter "appSignals"
 
 ![GDB parameter appSignals](graphics/GDB_parameter_appSignals.png)
 
+Parameter "projectInfo"
+
+![GDB parameter projectInfo](graphics/GDB_parameter_projectInfo.png)
+
 ## Operation of PLC
 
 The tank application can be controlled as following:
@@ -152,7 +157,7 @@ When clicking on the button "Energy data", some energy relevant values are displ
 
 ### Manual operation (intern)
 
-The tank application can be controlled manually in the global DB “GDB". Therefore the following parameters must be triggered (set to true, set to false):
+The tank application can be controlled manually in the global DB “GDB". Therefore the following parameter must be set to 'true' (right after these parameter are reset automatically to 'false'):
 
 - *GDB.hmiSignals.HMI_Start*
 - *GDB.hmiSignals.HMI_Stop*
@@ -160,13 +165,27 @@ The tank application can be controlled manually in the global DB “GDB". Theref
 
 ![Manual operation](graphics/ManualOperation.png)
 
+To simulate some faulty products and increase the number of "bottles faulty", the process can be interrupted by setting this parameter to 'true' during filling of a bottle (right after the parameter is reset automatically to 'false'):
+
+- *GDB.hmiSignals.HMI_NextBottle*
+
+It is also possible to simulate an error, which stops the whole filling process. In this case the parameter *GDB.operate.machineState* is set to *STATE_ERROR* (7). Therefore this parameter must be set to 'true'. The process can be started again, once the paramter was reset to 'false':
+
+- *GDB.hmiSignals.HMI_Error*
+
 ### Operation via Edge Apps (extern)
 
-The tank application can be controlled via self developed Edge apps. Therefore the following parameters must be triggered:
+The tank application can be controlled via self developed Edge apps. Therefore the following parameters must be triggered (accordingly to the explanation under chapter [Manual operation](#manual-operation-intern)):
 
 - *GDB.appSignals.APP_Start*
 - *GDB.appSignals.APP_Stop*
 - *GDB.appSignals.APP_Reset* (only possible, when the application is stopped)
+- *GDB.hmiSignals.APP_NextBottle*
+- *GDB.hmiSignals.APP_Error*
+
+TIA Portal code, where the operating commands are handled:
+
+![Sequence Network](graphics/SequenceNetwork.png)
 
 ### Program alarm
 
@@ -215,10 +234,6 @@ Interface parameter:
 - *GDB.appSignals.APP_Start*
 - *GDB.appSignals.APP_Stop*
 - *GDB.appSignals.APP_Reset*
-
-TIA Portal code, where the operating commands are handled:
-
-![Sequence Network](graphics/SequenceNetwork.png)
 
 ### IoT gateway
 
