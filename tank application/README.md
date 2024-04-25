@@ -56,6 +56,7 @@ The TIA Portal project can be found [here](tia-tank-application.zap16) as ZAP16 
 | 2022-01-19  |         | changed PLC to CPU 1513-1, changed unity of energy data to Wh,<br>changed TIA project from .zip to .zap16, added new use cases |
 | 2022-11-24  |         | automatic start of filling process, automatic value generation for 'faulty bottles',<br>embedded program alarm for testing |
 | 2023-04-20  | V1.0 | added new parameter for batchId, TIA projectInfo and gasConsumption |
+| 2024-04-18  | V1.1 | added new parameters for error simulation, HMI: added visualization for water/gas consumption |
 
 ### Used components
 
@@ -64,7 +65,7 @@ This application example has been created with the following hardware and softwa
 | Component | Version | Note |
 | --------- | ------- | ---- |
 | SIMATIC TIA Portal | V16 | simulation of HMI included |
-| SIMATIC PLCSIM Advanced | V3.0 | can be used for simulation of PLC |
+| SIMATIC PLCSIM Advanced | V5.0 | can be used for simulation of PLC |
 | Industrial Edge Management | - | see specific How To |
 | Industrial Edge Device | - | see specific How To |
 | Industrial Edge Apps | - | see specific How To |
@@ -192,6 +193,20 @@ TIA Portal code, where the operating commands are handled:
 The tank application offers the possibility to simulate a program alarm for testing purposes. Therefore the parameter *GDB.appSignals.APP_Alarm* acts as trigger. As long as this parameter is set to TRUE, the program alarm "This is a program alarm (test)" is active. The alarm status is written in the parameter *GDB.signals.alarm*. This active alarm is also visualised in the HMI, where the alarm table can be opened.
 
 ![Alarm](graphics/Alarm.png)
+
+### Error simulation
+
+The tank application offers the possibility to simulate some predefined production errors (unplanned downtimes). Therefore the parameters *GDB.errors* were added. 
+
+![ErrorParameter](graphics/ErrorParameter.png)
+
+The simulation is activated by default (GDB.errors.errorSimulation = true). Here the program simulated randomly an error whith a predefined duration of 2 minutes (adaptable via parameter GDB.errors.errorDuration). In this case the parameter GDB.operate.machineState is set to STATE_ERROR (7). The program also generates an error code an assigns it to the parameter GDB.errors.errorCode (UInt). Possible error codes are:
+
+![ErrorCodes](graphics/ErrorCodes.png)
+
+It is also possible to manually trigger an error via parameter GDB.errors.errorTrigger. This generates an one-time error.
+
+After each error occurance the machine state goes automatically into STATE_STOP (5) and finally starts again the process STATE_FILL_TANK (1).
 
 ## Edge use cases
 
