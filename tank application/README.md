@@ -176,13 +176,14 @@ It is also possible to simulate an error, which stops the whole filling process.
 
 ### Operation via Edge Apps (extern)
 
-The tank application can be controlled via self developed Edge apps. Therefore the following parameters must be triggered (accordingly to the explanation under chapter [Manual operation](#manual-operation-intern)):
+The tank application can be controlled via self developed Edge apps. Therefore the following parameters must be triggered (see dedicated explanations):
 
-- *GDB.appSignals.APP_Start*
-- *GDB.appSignals.APP_Stop*
-- *GDB.appSignals.APP_Reset* (only possible, when the application is stopped)
-- *GDB.hmiSignals.APP_NextBottle*
-- *GDB.hmiSignals.APP_Error*
+- *GDB.appSignals.APP_Start* (chapter [Manual operation](#manual-operation-intern)))
+- *GDB.appSignals.APP_Stop* (chapter [Manual operation](#manual-operation-intern)))
+- *GDB.appSignals.APP_Reset* (chapter [Manual operation](#manual-operation-intern))
+- *GDB.appSignals.APP_Alarm* (chapter [Program alarm](#program-alarm))
+- *GDB.appSignals.APP_Error* (chapter [Error simulation](#error-simulation))
+- *GDB.appSignals.APP_ErrorSimulation* (chapter [Error simulation](#error-simulation))
 
 TIA Portal code, where the operating commands are handled:
 
@@ -196,14 +197,27 @@ The tank application offers the possibility to simulate a program alarm for test
 
 ### Error simulation
 
-The tank application offers the possibility to simulate some predefined production errors (unplanned downtimes). Therefore the parameters *GDB.errors* were added. 
+1\) It is possible to **manually simulate an error**, which stops the whole filling process. In this case the parameter *GDB.operate.machineState* is set to *STATE_ERROR* (7). To trigger the error this parameter must be set to 'true':
 
-![ErrorParameter](graphics/ErrorParameter.png)
+- *GDB.appSignals.APP_Error*
 
-The simulation is activated by default (GDB.errors.errorSimulation = true). Here the program simulated randomly an error whith a predefined duration of 2 minutes (adaptable via parameter GDB.errors.errorDuration). In this case the parameter GDB.operate.machineState is set to STATE_ERROR (7). The program also generates an error code an assigns it to the parameter GDB.errors.errorCode (UInt). Possible error codes are:
+The error is available as long as this parameter is set to 'true'. You need to manually reset the error paramter by setting it to 'false'. After each error occurance the machine state goes automatically into STATE_STOP (5).The process can be continued, once you trigger the parameter *GDB.appSignals.APP_Start*.
+
+
+2\) The tank application offers the possibility to **automatically simulate predefined production errors** (unplanned downtimes). The simulation is deactivated by default. To activate the error simulation, this parameter must be set to 'true':
+
+ - *GDB.appSignals.APP_ErrorSimulation*
+
+The program randomly simulates an error whith a predefined duration of 5 minutes (adaptable via parameter GDB.errors.errorDuration). In this case the parameter GDB.operate.machineState is set to STATE_ERROR (7). The program also generates an error code and assigns it to the parameter GDB.errors.errorCode (UInt). Possible error codes are:
 
 ![ErrorCodes](graphics/ErrorCodes.png)
 
+?????????????
+Therefore the parameters *GDB.errors* were added. 
+
+![ErrorParameter](graphics/ErrorParameter.png)
+
+?????????????
 It is also possible to manually trigger an error via parameter GDB.errors.errorTrigger. This generates an one-time error.
 
 After each error occurance the machine state goes automatically into STATE_STOP (5) and finally starts again the process STATE_FILL_TANK (1).
