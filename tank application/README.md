@@ -173,10 +173,9 @@ By clicking the button "Push bottle", an error is simulated and the process stop
 
 On this HMI, all energy data are displayed directly on the main application screen.
 
-When clicking on the menu sign ![Options](image.png) and then on "Settings", the following screen is displayed:
+When clicking on the menu sign ![MenuButton](graphics/MainMenuButton1.PNG) and then on "Settings", the following screen is displayed:
 
-
-![Unified settings](graphics/Unified_Settings.png)
+![Unified Settings](graphics/Unified_Settings.PNG)
 
 Here you can see some additional parameters and set it differently, as well as stop the runtime if needed.
 
