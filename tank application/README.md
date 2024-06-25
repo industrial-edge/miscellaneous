@@ -56,6 +56,7 @@ The TIA Portal project can be found [here](tia-tank-application.zap16) as ZAP16 
 | 2022-01-19  |         | changed PLC to CPU 1513-1, changed unity of energy data to Wh,<br>changed TIA project from .zip to .zap16, added new use cases |
 | 2022-11-24  |         | automatic start of filling process, automatic value generation for 'faulty bottles',<br>embedded program alarm for testing |
 | 2023-04-20  | V1.0 | added new parameter for batchId, TIA projectInfo and gasConsumption |
+| 2024-06-25  | V2.0 | Migrated the TIA Portal project to V19. Added a new Unified Comfort Panel (MTP1500) in the TIA Portal project. Implemented a serial number and QR code generation for each product |
 
 ### Used components
 
@@ -63,20 +64,20 @@ This application example has been created with the following hardware and softwa
 
 | Component | Version | Note |
 | --------- | ------- | ---- |
-| SIMATIC TIA Portal | V16 | simulation of HMI included |
-| SIMATIC PLCSIM Advanced | V3.0 | can be used for simulation of PLC |
+| SIMATIC TIA Portal | V19 | simulation of HMI (TP900 Comfort) included |
+| SIMATIC PLCSIM Advanced | V6.0 | can be used for simulation of PLC |
+| SIMATIC Runtime Manager |  | can be used for simulation of the Unified Comfort panels or Unified PC Runtime |
 | Industrial Edge Management | - | see specific How To |
 | Industrial Edge Device | - | see specific How To |
 | Industrial Edge Apps | - | see specific How To |
 
 ## Engineering
 
-The TIA Portal project consists of a CPU 1513-1 and a corresponding HMI.
+The TIA Portal project consists of a CPU 1513-1 and T900 Comfort panel and a MTP1500 Unified Comfort panel.
 
 The CPU contains the engineering program for the whole tank application. It also runs on every other S7-1500 PLC. Alternatively the PLC can be simulated via PlcSim Advanced.
 
-![TIA Overview](graphics/TIA_Overview.png)
-
+![UUsed Hardware](<graphics/TIA Portal Used Hardware new.JPG>)
 ### Mode of operation
 
 The application works as following:
@@ -95,7 +96,8 @@ Once the application is started, it runs through the different operating states 
 
 The data exchange between the TIA Portal project and the Industrial Edge apps is done via the global DB “GDB”. This DB is set to ‘not optimized’, to be able to work with the offsets.
 
-![GDB Overview](graphics/GDB_Overview.png)
+
+![GDB Overview](<graphics/Interface DB new.JPG>)
 
 Parameter "operate"
 
@@ -115,8 +117,7 @@ Parameter "signals"
 
 Parameter "process"
 
-![GDB parameter process](graphics/GDB_parameter_process.png)
-
+![GDB parameter process](<graphics/Parameter process new.JPG>)
 Parameter "hmiSignals"
 
 ![GDB parameter hmiSignals](graphics/GDB_parameter_hmiSignals.png)
@@ -133,27 +134,51 @@ Parameter "projectInfo"
 
 The tank application can be controlled as following:
 
-- via the included HMI
+- via the included HMI's: TP900 Comfort and MTP1500 Unified Comfort
 - manually in the global DB “GDB” (from intern)
 - via Edge apps (from extern)
 
-### Operation via HMI
+### Operation via HMI - TP900 Comfort
 
-The included HMI can be simulated within the TIA Portal. Here the filling process can be started, stopped, and reset in an user-friendly way. It also visualizes the whole filling process. The HMI can be connected to a real PLC or to PlcSim Advanced, to get the process data.
+The included TP900 Comfort can be simulated within the TIA Portal. Here the filling process can be started, stopped, and reset in an user-friendly way. It also visualizes the whole filling process. The HMI can be connected to a real PLC or to PlcSim Advanced, to get the process data.
 
 > **NOTE:**  Please make sure your PG/PC interfaces settings are configured properly.
 
-![HMI](graphics/HMI.png)
+![HMI](<graphics/Tank Application 1 new.JPG>)
 
 To simulate some faulty products, the process can be interrupted by clicking on the button “Next bottle” during filling of a bottle. In this case the "Bottles faulty" number increases.
 
 By clicking the button "Push bottle", an error is simulated and the process stops. In this case the parameter *GDB.operate.machineState* is set to *STATE_ERROR* (7). The process can be started again, once the error was resolved. This can be done by clicking the button "Place bottle".
 
-![HMI error](graphics/Error.png)
+![HMI error](<graphics/Tank Application 2 new.JPG>)
 
 When clicking on the button "Energy data", some energy relevant values are displayed.
 
 ![HMI energy](graphics/HMI_Energy.png)
+
+### Operation via HMI - MTP1500 Unified Comfort
+
+The included MTP1500 Unified Comfort can be simulated on any web browser with the help of the SIMATIC Runtime Manager. Here the filling process can be started, stopped, and reset in an user-friendly way. It also visualizes the whole filling process. The HMI can be connected to a real PLC or to PLCSim Advanced, to get the process data.
+
+
+> **NOTE:**  Please make sure your PG/PC interfaces settings are configured properly. Also make sure that you went trough the WinCC Unified Configuration wizard for getting valid certificates.
+
+![Unified HMI Application](graphics/tankApplicationSimulation.gif)
+
+To simulate some faulty products, the process can be interrupted by clicking on the button “Next bottle” during filling of a bottle. In this case the "Bottles faulty" number increases.
+
+By clicking the button "Push bottle", an error is simulated and the process stops. In this case the parameter *GDB.operate.machineState* is set to *STATE_ERROR* (7). The process can be started again, once the error was resolved. This can be done by clicking the button "Place bottle".
+
+![Unified HMI error](<graphics/Unified HMI error.PNG>)
+
+On this HMI, all energy data are displayed directly on the main application screen.
+
+When clicking on the menu sign ![Options](image.png) and then on "Settings", the following screen is displayed:
+
+
+![Unified settings](graphics/Unified_Settings.png)
+
+Here you can see some additional parameters and set it differently, as well as stop the runtime if needed.
 
 ### Manual operation (intern)
 
