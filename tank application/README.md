@@ -15,7 +15,7 @@ This is the documentation for the TIA Portal project "tank application", which s
     - [Operation via HMI - TP900 Comfort](#operation-via-hmi---tp900-comfort)
     - [Operation via HMI - MTP1500 Unified Comfort](#operation-via-hmi---mtp1500-unified-comfort)
     - [Manual operation (intern)](#manual-operation-intern)
-    - [Operation via Edge apps (extern)](#operation-via-edge-apps-extern)
+    - [Operation via Edge Apps (extern)](#operation-via-edge-apps-extern)
     - [Program alarm](#program-alarm)
   - [Edge use cases](#edge-use-cases)
     - [QR-Code scanner](#qr-code-scanner)
@@ -214,9 +214,13 @@ TIA Portal code, where the operating commands are handled:
 
 ### Program alarm
 
-The tank application offers the possibility to simulate a program alarm for testing purposes. Therefore the parameter *GDB.appSignals.APP_Alarm* acts as trigger. As long as this parameter is set to TRUE, the program alarm "This is a program alarm (test)" is active. The alarm status is written in the parameter *GDB.signals.alarm*. This active alarm is also visualised in the HMI, where the alarm table can be opened.
+The tank application offers the possibility to simulate a program alarm for testing purposes. Therefore the parameter *GDB.appSignals.APP_Alarm* acts as trigger. As long as this parameter is set to TRUE, the program alarm "This is a program alarm (test)" is active. The alarm status is written in the parameter *GDB.signals.alarm*. This active alarm is also visualised in both HMI's, where the alarm table can be opened.
 
+TP900:
 ![Alarm](graphics/Alarm.png)
+
+MTP1500:
+![Alarm Unified](graphics/TestAlarm.PNG)
 
 ## Edge use cases
 
