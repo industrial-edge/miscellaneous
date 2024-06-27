@@ -56,7 +56,7 @@ The TIA Portal project can be found [here](tia-tank-application.zap16) as ZAP16 
 | 2021-07-08  |         | changed parameter "process" (UDInt), added overflow handling, changed HMI<br>docu: added options for operating the PLC, added use case |
 | 2022-01-19  |         | changed PLC to CPU 1513-1, changed unity of energy data to Wh,<br>changed TIA project from .zip to .zap16, added new use cases |
 | 2022-11-24  |         | automatic start of filling process, automatic value generation for 'faulty bottles',<br>embedded program alarm for testing |
-| 2023-04-20  | V1.0 | added new parameter for batchId, TIA projectInfo and gasConsumption |
+| 2023-04-20  | [V1.0](https://github.com/industrial-edge/miscellaneous/tree/V1.0.0/tank%20application) | added new parameter for batchId, TIA projectInfo and gasConsumption |
 | 2024-06-25  | V2.0 | Migrated the TIA Portal project to V19. Added a new Unified Comfort Panel (MTP1500) in the TIA Portal project. Implemented a serial number and QR code generation for each product |
 
 ### Used components
