@@ -44,7 +44,7 @@ This application is used within various use cases to demonstrate the Industrial 
 
 ### Source files
 
-The TIA Portal project can be found [here](tia-tank-application.zap16) as ZAP16 file (TIA compressed project) and can be opened directly in the TIA Portal V16 or higher.
+The TIA Portal project can be found [here](tia-tank-application.zap19) as zap19 file (TIA compressed project) and can be opened directly in the TIA Portal V19 or higher.
 
 ### History
 
@@ -55,9 +55,9 @@ The TIA Portal project can be found [here](tia-tank-application.zap16) as ZAP16 
 | 2021-06-10  |         | new state 'Error' in parameter 'machineState', changed HMI |
 | 2021-07-08  |         | changed parameter "process" (UDInt), added overflow handling, changed HMI<br>docu: added options for operating the PLC, added use case |
 | 2022-01-19  |         | changed PLC to CPU 1513-1, changed unity of energy data to Wh,<br>changed TIA project from .zip to .zap16, added new use cases |
-| 2022-11-24  |         | automatic start of filling process, automatic value generation for 'faulty bottles',<br>embedded program alarm for testing |
+| 2022-11-24  |         | automatic start of filling process, automatic value generation for<br> 'faulty bottles', embedded program alarm for testing |
 | 2023-04-20  | [V1.0](https://github.com/industrial-edge/miscellaneous/tree/V1.0.0/tank%20application) | added new parameter for batchId, TIA projectInfo and gasConsumption |
-| 2024-06-25 | V2.0 | migrated the TIA Portal project to V19, added a new Unified Comfort Panel (MTP1500) in the TIA Portal project, implemented a serial number and QR code generation for each product |
+| 2024-06-25 | V2.0 | migrated the TIA Portal project to V19, added a new Unified Comfort<br>Panel (MTP1500) in the TIA Portal project, implemented a serial number<br>and QR code generation for each product |
 
 ### Used components
 
@@ -67,7 +67,7 @@ This application example has been created with the following hardware and softwa
 | --------- | ------- | ---- |
 | SIMATIC TIA Portal | V19 | simulation of HMI (TP900 Comfort) included |
 | SIMATIC PLCSIM Advanced | V6.0 | can be used for simulation of PLC |
-| SIMATIC Runtime Manager |  | can be used for simulation of the Unified Comfort panels or Unified PC Runtime |
+| SIMATIC Runtime Manager |  | can be used for simulation of the Unified Comfort panels<br>or Unified PC Runtime |
 | Industrial Edge Management | - | see specific How To |
 | Industrial Edge Device | - | see specific How To |
 | Industrial Edge Apps | - | see specific How To |
@@ -146,13 +146,13 @@ The included TP900 Comfort can be simulated within the TIA Portal. Here the fill
 
 > **NOTE:**  Please make sure your PG/PC interfaces settings are configured properly.
 
-![HMI](<graphics/HMI_TP900_1.png)
+![HMI](graphics/HMI_TP900_1.png)
 
 To simulate some faulty products, the process can be interrupted by clicking on the button “Next bottle” during filling of a bottle. In this case the "Bottles faulty" number increases.
 
 By clicking the button "Push bottle", an error is simulated and the process stops. In this case the parameter *GDB.operate.machineState* is set to *STATE_ERROR* (7). The process can be started again, once the error was resolved. This can be done by clicking the button "Place bottle".
 
-![HMI error](<graphics/HMI_TP900_1.png)
+![HMI error](graphics/HMI_TP900_1.png)
 
 When clicking on the button "Energy data", some energy relevant values are displayed.
 
