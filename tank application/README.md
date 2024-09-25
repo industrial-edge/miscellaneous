@@ -146,7 +146,7 @@ The tank application can be controlled as following:
 - manually in the global DB “GDB” (from intern)
 - via Edge apps (from extern)
 
-### Operation via HMI
+### Operation via HMI - TP900 Comfort
 
 The included TP900 Comfort can be simulated within the TIA Portal. Here the filling process can be started, stopped, and reset in an user-friendly way. It also visualizes the whole filling process. The HMI can be connected to a real PLC or to PlcSim Advanced, to get the process data.
 
