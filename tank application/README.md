@@ -12,10 +12,12 @@ This is the documentation for the TIA Portal project "tank application", which s
     - [Mode of operation](#mode-of-operation)
     - [Interface DB](#interface-db)
   - [Operation of PLC](#operation-of-plc)
-    - [Operation via HMI](#operation-via-hmi)
+    - [Operation via HMI - TP900 Comfort](#operation-via-hmi---tp900-comfort)
+    - [Operation via HMI - MTP1500 Unified Comfort](#operation-via-hmi---mtp1500-unified-comfort)
     - [Manual operation (intern)](#manual-operation-intern)
     - [Operation via Edge apps (extern)](#operation-via-edge-apps-extern)
     - [Program alarm](#program-alarm)
+    - [Error simulation](#error-simulation)
   - [Edge use cases](#edge-use-cases)
     - [QR-Code scanner](#qr-code-scanner)
     - [Archiving and visualization](#archiving-and-visualization)
@@ -43,7 +45,7 @@ This application is used within various use cases to demonstrate the Industrial 
 
 ### Source files
 
-The TIA Portal project can be found [here](tia-tank-application.zap16) as ZAP16 file (TIA compressed project) and can be opened directly in the TIA Portal V16 or higher.
+The TIA Portal project can be found [here](tia-tank-application.zap19) as zap19 file (TIA compressed project) and can be opened directly in the TIA Portal V19 or higher.
 
 ### History
 
@@ -55,8 +57,9 @@ The TIA Portal project can be found [here](tia-tank-application.zap16) as ZAP16 
 | 2021-07-08  |         | changed parameter "process" (UDInt), added overflow handling, changed HMI<br>docu: added options for operating the PLC, added use case |
 | 2022-01-19  |         | changed PLC to CPU 1513-1, changed unity of energy data to Wh,<br>changed TIA project from .zip to .zap16, added new use cases |
 | 2022-11-24  |         | automatic start of filling process, automatic value generation for 'faulty bottles',<br>embedded program alarm for testing |
-| 2023-04-20  | V1.0 | added new parameter for batchId, TIA projectInfo and gasConsumption |
-| 2024-04-18  | V1.1 | added new parameters for error simulation, HMI: added visualization for water/gas consumption |
+| 2023-04-20  | [V1.0](https://github.com/industrial-edge/miscellaneous/tree/V1.0.0/tank%20application) | added new parameter for batchId, TIA projectInfo and gasConsumption |
+| 2024-06-25 | V2.0 | migrated the TIA Portal project to V19, added a new Unified Comfort <br>Panel (MTP1500) in the TIA Portal project, new parameters: numberGood, <br>productTypeID, productTypeName, productSerialNumber, productQRCode |
+| 2024-09-26  | V3.0 | added error simulation, adapted error codes, TP900: added visualization for water/gas consumption |
 
 ### Used components
 
@@ -64,15 +67,16 @@ This application example has been created with the following hardware and softwa
 
 | Component | Version | Note |
 | --------- | ------- | ---- |
-| SIMATIC TIA Portal | V16 | simulation of HMI included |
-| SIMATIC PLCSIM Advanced | V5.0 | can be used for simulation of PLC |
+| SIMATIC TIA Portal | V19 | simulation of HMI (TP900 Comfort) included |
+| SIMATIC PLCSIM Advanced | V6.0 | can be used for simulation of PLC |
+| SIMATIC Runtime Manager |  | can be used for simulation of the Unified Comfort panels<br>or Unified PC Runtime |
 | Industrial Edge Management | - | see specific How To |
 | Industrial Edge Device | - | see specific How To |
 | Industrial Edge Apps | - | see specific How To |
 
 ## Engineering
 
-The TIA Portal project consists of a CPU 1513-1 and a corresponding HMI.
+The TIA Portal project consists of a CPU 1513-1, a T900 Comfort panel and a MTP1500 Unified Comfort panel.
 
 The CPU contains the engineering program for the whole tank application. It also runs on every other S7-1500 PLC. Alternatively the PLC can be simulated via PlcSim Advanced.
 
@@ -130,17 +134,21 @@ Parameter "projectInfo"
 
 ![GDB parameter projectInfo](graphics/GDB_parameter_projectInfo.png)
 
+Parameter "errors"
+
+![GDB parameter projectInfo](graphics/GDB_parameter_errors.png)
+
 ## Operation of PLC
 
 The tank application can be controlled as following:
 
-- via the included HMI
+- via the included HMIs: TP900 Comfort and MTP1500 Unified Comfort
 - manually in the global DB “GDB” (from intern)
 - via Edge apps (from extern)
 
 ### Operation via HMI
 
-The included HMI can be simulated within the TIA Portal. Here the filling process can be started, stopped, and reset in an user-friendly way. It also visualizes the whole filling process. The HMI can be connected to a real PLC or to PlcSim Advanced, to get the process data.
+The included TP900 Comfort can be simulated within the TIA Portal. Here the filling process can be started, stopped, and reset in an user-friendly way. It also visualizes the whole filling process. The HMI can be connected to a real PLC or to PlcSim Advanced, to get the process data.
 
 > **NOTE:**  Please make sure your PG/PC interfaces settings are configured properly.
 
@@ -156,9 +164,31 @@ When clicking on the button "Energy data", some energy relevant values are displ
 
 ![HMI energy](graphics/HMI_Energy.png)
 
+### Operation via HMI - MTP1500 Unified Comfort
+
+The included MTP1500 Unified Comfort can be simulated on any web browser with the help of the SIMATIC Runtime Manager. Here the filling process can be started, stopped, and reset in an user-friendly way. It also visualizes the whole filling process. The HMI can be connected to a real PLC or to PLCSim Advanced, to get the process data.
+
+> **NOTE:**  Please make sure your PG/PC interfaces settings are configured properly. Also make sure that you went trough the WinCC Unified Configuration wizard for getting valid certificates.
+
+![Unified HMI Application](graphics/HMI_Unified_Simulation.gif)
+
+To simulate some faulty products, the process can be interrupted by clicking on the button “Next bottle” during filling of a bottle. In this case the "Bottles faulty" number increases.
+
+By clicking the button "Simulate error", an error is simulated and the process stops. In this case the parameter *GDB.operate.machineState* is set to *STATE_ERROR* (7). The process can be started again, once the error was resolved. This can be done by clicking the button "Reset error".
+
+![Unified HMI error](graphics/HMI_Unified_Error.png)
+
+On this HMI, all energy data are displayed directly on the main application screen.
+
+When clicking on the menu sign ![MenuButton](graphics/MainMenuButton1.PNG) and then on "Settings", the following screen is displayed:
+
+![Unified Settings](graphics/HMI_Unified_Settings.png)
+
+Here you can see some additional parameters and set it differently, as well as stop the runtime if needed.
+
 ### Manual operation (intern)
 
-The tank application can be controlled manually in the global DB “GDB". Therefore the following parameter must be set to 'true' (right after these parameter are reset automatically to 'false'):
+The tank application can be controlled manually in the global DB “GDB". Therefore the following parameter must be set to TRUE (right after these parameter are reset automatically to FALSE):
 
 - *GDB.hmiSignals.HMI_Start*
 - *GDB.hmiSignals.HMI_Stop*
@@ -166,11 +196,11 @@ The tank application can be controlled manually in the global DB “GDB". Theref
 
 ![Manual operation](graphics/ManualOperation.png)
 
-To simulate some faulty products and increase the number of "bottles faulty", the process can be interrupted by setting this parameter to 'true' during filling of a bottle (right after the parameter is reset automatically to 'false'):
+To simulate some faulty products and increase the number of "bottles faulty", the process can be interrupted by setting this parameter to TRUE during filling of a bottle (right after the parameter is reset automatically to FALSE):
 
 - *GDB.hmiSignals.HMI_NextBottle*
 
-It is also possible to simulate an error, which stops the whole filling process. In this case the parameter *GDB.operate.machineState* is set to *STATE_ERROR* (7). Therefore this parameter must be set to 'true'. The process can be started again, once the paramter was reset to 'false':
+It is also possible to simulate an error, which stops the whole filling process. In this case the parameter *GDB.operate.machineState* is set to *STATE_ERROR* (7). Therefore this parameter must be set to TRUE. The process can be started again, once the paramter was reset to FALSE:
 
 - *GDB.hmiSignals.HMI_Error*
 
@@ -181,9 +211,10 @@ The tank application can be controlled via self developed Edge apps. Therefore t
 - *GDB.appSignals.APP_Start* (chapter [Manual operation](#manual-operation-intern)))
 - *GDB.appSignals.APP_Stop* (chapter [Manual operation](#manual-operation-intern)))
 - *GDB.appSignals.APP_Reset* (chapter [Manual operation](#manual-operation-intern))
-- *GDB.appSignals.APP_Alarm* (chapter [Program alarm](#program-alarm))
-- *GDB.appSignals.APP_Error* (chapter [Error simulation](#error-simulation))
+- *GDB.appSignals.APP_QRCode* (chapter [Manual operation](#qr-code-scanner))
 - *GDB.appSignals.APP_ErrorSimulation* (chapter [Error simulation](#error-simulation))
+- *GDB.appSignals.APP_Error* (chapter [Error simulation](#error-simulation))
+- *GDB.appSignals.APP_Alarm* (chapter [Program alarm](#program-alarm))
 
 TIA Portal code, where the operating commands are handled:
 
@@ -191,36 +222,42 @@ TIA Portal code, where the operating commands are handled:
 
 ### Program alarm
 
-The tank application offers the possibility to simulate a program alarm for testing purposes. Therefore the parameter *GDB.appSignals.APP_Alarm* acts as trigger. As long as this parameter is set to TRUE, the program alarm "This is a program alarm (test)" is active. The alarm status is written in the parameter *GDB.signals.alarm*. This active alarm is also visualised in the HMI, where the alarm table can be opened.
+The tank application offers the possibility to simulate a program alarm for testing purposes. Therefore the parameter *GDB.appSignals.APP_Alarm* acts as trigger. As long as this parameter is set to TRUE, the program alarm is active and shows the text "This is a program alarm (test). Current batch ID = \<batchID>" (with variable content for \<batchID>). The alarm status is written in the parameter *GDB.signals.alarm*. This active alarm is also visualised in the HMI, where the alarm table can be opened.
 
-![Alarm](graphics/Alarm.png)
+TP900:
+
+![Alarm](graphics/AlarmTP900.png)
+
+MTP1500:
+
+![Alarm Unified](graphics/AlarmMTP1500.png)
 
 ### Error simulation
 
-1\) It is possible to **manually simulate an error**, which stops the whole filling process. In this case the parameter *GDB.operate.machineState* is set to *STATE_ERROR* (7). To trigger the error this parameter must be set to 'true':
+1\) It is possible to **manually simulate an error**, which stops the whole filling process. In this case the parameter *GDB.operate.machineState* is set to *STATE_ERROR* (7). To trigger the error this parameter must be set to TRUE:
 
 - *GDB.appSignals.APP_Error*
 
-The error is available as long as this parameter is set to 'true'. You need to manually reset the error paramter by setting it to 'false'. After each error occurance the machine state goes automatically into STATE_STOP (5).The process can be continued, once you trigger the parameter *GDB.appSignals.APP_Start*.
+The error is available as long as this parameter is set to TRUE. You need to manually reset the error paramter by setting it to FALSE. After each error occurance the machine state goes automatically into STATE_STOP (5).The process can be continued, once you trigger the parameter *GDB.appSignals.APP_Start*.
 
 
-2\) The tank application offers the possibility to **automatically simulate predefined production errors** (unplanned downtimes). The simulation is deactivated by default. To activate the error simulation, this parameter must be set to 'true':
+2\) The tank application offers the possibility to **automatically simulate predefined production errors** (unplanned downtimes). The simulation is deactivated by default. To activate the error simulation, this parameter must be set to TRUE:
 
  - *GDB.appSignals.APP_ErrorSimulation*
 
-The program randomly simulates an error whith a predefined duration of 5 minutes (adaptable via parameter GDB.errors.errorDuration). In this case the parameter GDB.operate.machineState is set to STATE_ERROR (7). The program also generates an error code and assigns it to the parameter GDB.errors.errorCode (UInt). Possible error codes are:
+The program randomly simulates an error whith a predefined duration of 10 minutes (adaptable via parameter GDB.errors.errorDuration). In this case the parameter GDB.operate.machineState is set to STATE_ERROR (7). The program also generates an error code and assigns it to the parameter GDB.errors.errorCode (UInt). Possible error codes are:
 
 ![ErrorCodes](graphics/ErrorCodes.png)
 
-?????????????
-Therefore the parameters *GDB.errors* were added. 
+The dedicated parameters can be found under *GDB.errors*:
+
+- *GDB.errors.errorTrigger* can be used to manually trigger an one-time error occurance when setting it to TRUE (therefore *GDB.appSignals.APP_ErrorSimulation* must be activated). In this case the parameter GDB.operate.machineState is set to STATE_ERROR (7).
+
+- *GDB.errors.errorDuration* defines the error duration of the simulated errors. The default setting is 10 minutes. This can be changed as needed.
 
 ![ErrorParameter](graphics/ErrorParameter.png)
 
-?????????????
-It is also possible to manually trigger an error via parameter GDB.errors.errorTrigger. This generates an one-time error.
-
-After each error occurance the machine state goes automatically into STATE_STOP (5) and finally starts again the process STATE_FILL_TANK (1).
+After each error occurance the machine state goes automatically into STATE_STOP (5).The process can be continued, once you trigger the parameter *GDB.appSignals.APP_Start*.
 
 ## Edge use cases
 
