@@ -17,6 +17,7 @@ This is the documentation for the TIA Portal project "tank application", which s
     - [Manual operation (intern)](#manual-operation-intern)
     - [Operation via Edge Apps (extern)](#operation-via-edge-apps-extern)
     - [Program alarm](#program-alarm)
+    - [Error simulation](#error-simulation)
   - [Edge use cases](#edge-use-cases)
     - [QR-Code scanner](#qr-code-scanner)
     - [Archiving and visualization](#archiving-and-visualization)
@@ -55,9 +56,10 @@ The TIA Portal project can be found [here](tia-tank-application.zap19) as zap19 
 | 2021-06-10  |         | new state 'Error' in parameter 'machineState', changed HMI |
 | 2021-07-08  |         | changed parameter "process" (UDInt), added overflow handling, changed HMI<br>docu: added options for operating the PLC, added use case |
 | 2022-01-19  |         | changed PLC to CPU 1513-1, changed unity of energy data to Wh,<br>changed TIA project from .zip to .zap16, added new use cases |
-| 2022-11-24  |         | automatic start of filling process, automatic value generation for<br> 'faulty bottles', embedded program alarm for testing |
+| 2022-11-24  |         | automatic start of filling process, automatic value generation for 'faulty bottles',<br>embedded program alarm for testing |
 | 2023-04-20  | [V1.0](https://github.com/industrial-edge/miscellaneous/tree/V1.0.0/tank%20application) | added new parameter for batchId, TIA projectInfo and gasConsumption |
-| 2024-06-25 | V2.0 | migrated the TIA Portal project to V19, added a new Unified Comfort<br>Panel (MTP1500) in the TIA Portal project, implemented a serial number<br>and QR code generation for each product |
+| 2024-06-25  | [V2.0](https://github.com/industrial-edge/miscellaneous/tree/V2.0.0/tank%20application) | migrated the TIA Portal project to V19, added a new Unified Comfort <br>Panel (MTP1500) in the TIA Portal project, new parameters: numberGood, <br>productTypeID, productTypeName, productSerialNumber, productQRCode |
+| 2024-09-26  | V3.0 | added error simulation, adapted error codes, TP900: added visualization <br>for water/gas consumption, alarm with variable content, generate user <br>messages in Diag Buffer |
 
 ### Used components
 
@@ -132,6 +134,10 @@ Parameter "projectInfo"
 
 ![GDB parameter projectInfo](graphics/GDB_parameter_projectInfo.png)
 
+Parameter "errors"
+
+![GDB parameter projectInfo](graphics/GDB_parameter_errors.png)
+
 ## Operation of PLC
 
 The tank application can be controlled as following:
@@ -146,13 +152,13 @@ The included TP900 Comfort can be simulated within the TIA Portal. Here the fill
 
 > **NOTE:**  Please make sure your PG/PC interfaces settings are configured properly.
 
-![HMI](graphics/HMI_TP900_1.png)
+![HMI](graphics/HMI.png)
 
 To simulate some faulty products, the process can be interrupted by clicking on the button “Next bottle” during filling of a bottle. In this case the "Bottles faulty" number increases.
 
 By clicking the button "Push bottle", an error is simulated and the process stops. In this case the parameter *GDB.operate.machineState* is set to *STATE_ERROR* (7). The process can be started again, once the error was resolved. This can be done by clicking the button "Place bottle".
 
-![HMI error](graphics/HMI_TP900_1.png)
+![HMI error](graphics/Error.png)
 
 When clicking on the button "Energy data", some energy relevant values are displayed.
 
@@ -161,7 +167,6 @@ When clicking on the button "Energy data", some energy relevant values are displ
 ### Operation via HMI - MTP1500 Unified Comfort
 
 The included MTP1500 Unified Comfort can be simulated on any web browser with the help of the SIMATIC Runtime Manager. Here the filling process can be started, stopped, and reset in an user-friendly way. It also visualizes the whole filling process. The HMI can be connected to a real PLC or to PLCSim Advanced, to get the process data.
-
 
 > **NOTE:**  Please make sure your PG/PC interfaces settings are configured properly. Also make sure that you went trough the WinCC Unified Configuration wizard for getting valid certificates.
 
@@ -183,7 +188,7 @@ Here you can see some additional parameters and set it differently, as well as s
 
 ### Manual operation (intern)
 
-The tank application can be controlled manually in the global DB “GDB". Therefore the following parameter must be set to 'true' (right after these parameter are reset automatically to 'false'):
+The tank application can be controlled manually in the global DB “GDB". Therefore the following parameter must be set to TRUE (right after these parameter are reset automatically to FALSE):
 
 - *GDB.hmiSignals.HMI_Start*
 - *GDB.hmiSignals.HMI_Stop*
@@ -191,23 +196,25 @@ The tank application can be controlled manually in the global DB “GDB". Theref
 
 ![Manual operation](graphics/ManualOperation.png)
 
-To simulate some faulty products and increase the number of "bottles faulty", the process can be interrupted by setting this parameter to 'true' during filling of a bottle (right after the parameter is reset automatically to 'false'):
+To simulate some faulty products and increase the number of "bottles faulty", the process can be interrupted by setting this parameter to TRUE during filling of a bottle (right after the parameter is reset automatically to FALSE):
 
 - *GDB.hmiSignals.HMI_NextBottle*
 
-It is also possible to simulate an error, which stops the whole filling process. In this case the parameter *GDB.operate.machineState* is set to *STATE_ERROR* (7). Therefore this parameter must be set to 'true'. The process can be started again, once the paramter was reset to 'false':
+It is also possible to simulate an error, which stops the whole filling process. In this case the parameter *GDB.operate.machineState* is set to *STATE_ERROR* (7). Therefore this parameter must be set to TRUE. The process can be started again, once the paramter was reset to FALSE:
 
 - *GDB.hmiSignals.HMI_Error*
 
 ### Operation via Edge Apps (extern)
 
-The tank application can be controlled via self developed Edge apps. Therefore the following parameters must be triggered (accordingly to the explanation under chapter [Manual operation](#manual-operation-intern)):
+The tank application can be controlled via self developed Edge apps. Therefore the following parameters must be triggered (see dedicated explanations):
 
-- *GDB.appSignals.APP_Start*
-- *GDB.appSignals.APP_Stop*
-- *GDB.appSignals.APP_Reset* (only possible, when the application is stopped)
-- *GDB.hmiSignals.APP_NextBottle*
-- *GDB.hmiSignals.APP_Error*
+- *GDB.appSignals.APP_Start* (chapter [Manual operation](#manual-operation-intern)))
+- *GDB.appSignals.APP_Stop* (chapter [Manual operation](#manual-operation-intern)))
+- *GDB.appSignals.APP_Reset* (chapter [Manual operation](#manual-operation-intern))
+- *GDB.appSignals.APP_QRCode* (chapter [Manual operation](#qr-code-scanner))
+- *GDB.appSignals.APP_ErrorSimulation* (chapter [Error simulation](#error-simulation))
+- *GDB.appSignals.APP_Error* (chapter [Error simulation](#error-simulation))
+- *GDB.appSignals.APP_Alarm* (chapter [Program alarm](#program-alarm))
 
 TIA Portal code, where the operating commands are handled:
 
@@ -215,13 +222,42 @@ TIA Portal code, where the operating commands are handled:
 
 ### Program alarm
 
-The tank application offers the possibility to simulate a program alarm for testing purposes. Therefore the parameter *GDB.appSignals.APP_Alarm* acts as trigger. As long as this parameter is set to TRUE, the program alarm "This is a program alarm (test)" is active. The alarm status is written in the parameter *GDB.signals.alarm*. This active alarm is also visualised in both HMIs, where the alarm table can be opened.
+The tank application offers the possibility to simulate a program alarm for testing purposes. Therefore the parameter *GDB.appSignals.APP_Alarm* acts as trigger. As long as this parameter is set to TRUE, the program alarm is active and shows the text "This is a program alarm (test). Current batch ID = \<batchID>" (with variable content for \<batchID>). The alarm status is written in the parameter *GDB.signals.alarm*. This active alarm is also visualised in the HMI, where the alarm table can be opened.
 
 TP900:
-![Alarm](graphics/Alarm.png)
+
+![Alarm](graphics/AlarmTP900.png)
 
 MTP1500:
-![Alarm Unified](graphics/TestAlarm.PNG)
+
+![Alarm Unified](graphics/AlarmMTP1500.png)
+
+### Error simulation
+
+1\) It is possible to **manually simulate an error**, which stops the whole filling process. In this case the parameter *GDB.operate.machineState* is set to *STATE_ERROR* (7). To trigger the error this parameter must be set to TRUE:
+
+- *GDB.appSignals.APP_Error*
+
+The error is available as long as this parameter is set to TRUE. You need to manually reset the error paramter by setting it to FALSE. After each error occurance the machine state goes automatically into STATE_STOP (5).The process can be continued, once you trigger the parameter *GDB.appSignals.APP_Start*.
+
+
+2\) The tank application offers the possibility to **automatically simulate predefined production errors** (unplanned downtimes). The simulation is deactivated by default. To activate the error simulation, this parameter must be set to TRUE:
+
+ - *GDB.appSignals.APP_ErrorSimulation*
+
+The program randomly simulates an error whith a predefined duration of 10 minutes (adaptable via parameter GDB.errors.errorDuration). In this case the parameter GDB.operate.machineState is set to STATE_ERROR (7). The program also generates an error code and assigns it to the parameter GDB.errors.errorCode (UInt). Possible error codes are:
+
+![ErrorCodes](graphics/ErrorCodes.png)
+
+The dedicated parameters can be found under *GDB.errors*:
+
+- *GDB.errors.errorTrigger* can be used to manually trigger an one-time error occurance when setting it to TRUE (therefore *GDB.appSignals.APP_ErrorSimulation* must be activated). In this case the parameter GDB.operate.machineState is set to STATE_ERROR (7).
+
+- *GDB.errors.errorDuration* defines the error duration of the simulated errors. The default setting is 10 minutes. This can be changed as needed.
+
+![ErrorParameter](graphics/ErrorParameter.png)
+
+After each error occurance the machine state goes automatically into STATE_STOP (5).The process can be continued, once you trigger the parameter *GDB.appSignals.APP_Start*.
 
 ## Edge use cases
 
