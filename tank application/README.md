@@ -59,7 +59,9 @@ The TIA Portal project can be found [here](tia-tank-application.zap19) as zap19 
 | 2022-11-24  |         | automatic start of filling process, automatic value generation for 'faulty bottles',<br>embedded program alarm for testing |
 | 2023-04-20  | [V1.0](https://github.com/industrial-edge/miscellaneous/tree/V1.0.0/tank%20application) | added new parameter for batchId, TIA projectInfo and gasConsumption |
 | 2024-06-25  | [V2.0](https://github.com/industrial-edge/miscellaneous/tree/V2.0.0/tank%20application) | migrated the TIA Portal project to V19, added a new Unified Comfort <br>Panel (MTP1500) in the TIA Portal project, new parameters: numberGood, <br>productTypeID, productTypeName, productSerialNumber, productQRCode |
-| 2024-09-26  | V3.0 | added error simulation, adapted error codes, TP900: added visualization <br>for water/gas consumption, alarm with variable content, generate user <br>messages in Diag Buffer |
+| 2024-09-26  | [V3.0](https://github.com/industrial-edge/miscellaneous/tree/V3.0.0/tank%20application) | added error simulation, adapted error codes, TP900: added visualization <br>for water/gas consumption, alarm with variable content, generate user <br>messages in Diag Buffer |
+| 2025-07-01  | V4.0 | bottle volume = 1l (previous 100l), cycle time updates, product ID updates, added CIP data, HMI fixes, simulation of installed pump and renewed heating element, added energy consumptions for standard machine states |
+
 
 ### Used components
 
