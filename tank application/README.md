@@ -137,7 +137,11 @@ Parameter "projectInfo"
 
 Parameter "errors"
 
-![GDB parameter projectInfo](graphics/GDB_parameter_errors.png)
+![GDB parameter errors](graphics/GDB_parameter_errors.png)
+
+Parameter "CIP"
+
+![GDB parameter cip](graphics/GDB_parameter_cip.png)
 
 ## Operation of PLC
 
@@ -242,7 +246,7 @@ MTP1500:
 The error is available as long as this parameter is set to TRUE. You need to manually reset the error paramter by setting it to FALSE. After each error occurance the machine state goes automatically into STATE_STOP (5).The process can be continued, once you trigger the parameter *GDB.appSignals.APP_Start*.
 
 
-2\) The tank application offers the possibility to **automatically simulate predefined production errors** (unplanned downtimes). The simulation is deactivated by default. To activate the error simulation, this parameter must be set to TRUE:
+2\) The tank application offers the possibility to **automatically simulate predefined production errors** (unplanned downtimes). The simulation is activated by default. To deactivate the error simulation, this parameter must be set to FALSE:
 
  - *GDB.appSignals.APP_ErrorSimulation*
 
@@ -259,6 +263,26 @@ The dedicated parameters can be found under *GDB.errors*:
 ![ErrorParameter](graphics/ErrorParameter.png)
 
 After each error occurance the machine state goes automatically into STATE_STOP (5).The process can be continued, once you trigger the parameter *GDB.appSignals.APP_Start*.
+
+### Simulate process improvement
+
+It is possible to manually simulate a process improvement which affects the filling behaviour of the machine. To activate the simultion, this parameter must be set to TRUE: 
+
+ - *GDB.hmiSignals.HMI_InstallFillingPump*
+
+ In this case a constant filling pressure is simulated which leads to an improved behaviour when looking at process efficiency values.
+
+### Simulate energy improvement
+
+It is possible to manually simulate an energy consumption improvement within the filling process. To activate the simultion, this parameter must be set to TRUE: 
+
+ - *GDB.hmiSignals.HMI_RenewHeatingElement*
+
+ In this case the electricity consumption for the tank heating state is reduced.
+
+### Energy consumption per machine state
+
+xxx
 
 ## Edge use cases
 
