@@ -278,11 +278,29 @@ It is possible to manually simulate an energy consumption improvement within the
 
  - *GDB.hmiSignals.HMI_RenewHeatingElement*
 
- In this case the electricity consumption for the tank heating state is reduced.
+ In this case the electricity consumption for the tank heating state is reduced (*GDB.signals.energySignals.energyConsumptionHeatingTank*).
 
 ### Energy consumption per machine state
 
-xxx
+The standard specifies 6 machine states:  
+
+1 = Powering up  
+2 = Powering down  
+3 = Off  
+4 = Standby  
+5 = Operational  
+6 = Working  
+
+This PLC project randomly simulates values for each of them (without any reference to the filling process). These values can be used for the Use Case [Energy Efficiency Monitoring with Industrial Edge](#energy-efficiency-monitoring-with-industrial-edge).
+
+- *GDB.signals.energySignalsPerState.stateId*
+- *GDB.signals.energySignalsPerState.energyConsumptionStatePoweringUp*
+- *GDB.signals.energySignalsPerState.energyConsumptionStatePoweringDown*
+- *GDB.signals.energySignalsPerState.energyConsumptionStateOff*
+- *GDB.signals.energySignalsPerState.energyConsumptionStateStandby*
+- *GDB.signals.energySignalsPerState.energyConsumptionStateOperational*
+- *GDB.signals.energySignalsPerState.energyConsumptionStateWorking*
+- *GDB.signals.energySignalsPerState.energyConsumptionStateTotal*
 
 ## Edge use cases
 
@@ -432,6 +450,22 @@ This example shows how to centrally send data from the field level (several edge
 The related How To can be found [here](https://github.com/industrial-edge/notifier-api).
 
 This guide shows how to use the Notifier OpenAPI in different ways. The API is implemented within an user-developed app to send notifications to the Notifier.
+
+## Energy Efficiency Monitoring with Industrial Edge
+
+Summarized energy values for a machine are delivered via one PLC parameter:
+
+*GDB.signals.energySignalsPerState.energyConsumptionStateTotal*
+
+The dedicated machine state is also delivered via a PLC parameter:
+
+*GDB.signals.energySignalsPerState.stateId*
+
+Within IIH Essentials, a transformation function is used: Depending on the machine state, the energy value is written to a dedicated IIH variable (a separate variable for each state).
+
+Finally, these status variables will be shown in an overview dashboard within Energy Manager:
+
+![EE Monitoring](graphics/EE_Monitoring.png)
 
 ## Contribution
 
