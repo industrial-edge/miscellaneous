@@ -272,6 +272,8 @@ It is possible to manually simulate a process improvement which affects the fill
 
  In this case a constant filling pressure is simulated which leads to an improved behaviour when looking at process efficiency values.
 
+ ![ProcessImprovement](graphics/ProcessImprovement.png)
+
 ### Simulate energy improvement
 
 It is possible to manually simulate an energy consumption improvement within the filling process. To activate the simultion, this parameter must be set to TRUE: 
@@ -279,6 +281,8 @@ It is possible to manually simulate an energy consumption improvement within the
  - *GDB.hmiSignals.HMI_RenewHeatingElement*
 
  In this case the electricity consumption for the tank heating state is reduced (*GDB.signals.energySignals.energyConsumptionHeatingTank*).
+
+ ![EnergyImprovement](graphics/EnergyImprovement.png)
 
 ### Energy consumption per machine state
 
