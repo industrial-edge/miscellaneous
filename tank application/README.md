@@ -19,9 +19,7 @@ This is the documentation for the TIA Portal project "tank application", which s
     - [Program alarm](#program-alarm)
     - [Error simulation](#error-simulation)
   - [Edge use cases](#edge-use-cases)
-    - [QR-Code scanner](#qr-code-scanner)
     - [Archiving and visualization](#archiving-and-visualization)
-    - [Archiving and operation](#archiving-and-operation)
     - [IoT gateway](#iot-gateway)
     - [Data service - Getting started](#data-service---getting-started)
     - [Notifier - Getting started](#notifier---getting-started)
@@ -31,7 +29,6 @@ This is the documentation for the TIA Portal project "tank application", which s
     - [Machine insight - Getting started](#machine-insight---getting-started)
     - [Profinet IO connector - Getting started](#profinet-io-connector---getting-started)
     - [Apache Kafka Connector](#apache-kafka-connector)
-    - [Data concentrator with Data Service](#data-concentrator-with-data-service)
     - [Notifier API](#notifier-api)
   - [Contribution](#contribution)
 
@@ -49,17 +46,18 @@ The TIA Portal project can be found [here](tia-tank-application.zap19) as zap19 
 
 ### History
 
-| Date        | Version | Note           |
+| <br>Date &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Version | Note |
 | ------------| ------- | -------------- |
 | 2021-05-20  |         | first version  |
 | 2021-06-09  |         | changed parameter "process" (Int > DInt) |
 | 2021-06-10  |         | new state 'Error' in parameter 'machineState', changed HMI |
-| 2021-07-08  |         | changed parameter "process" (UDInt), added overflow handling, changed HMI<br>docu: added options for operating the PLC, added use case |
-| 2022-01-19  |         | changed PLC to CPU 1513-1, changed unity of energy data to Wh,<br>changed TIA project from .zip to .zap16, added new use cases |
-| 2022-11-24  |         | automatic start of filling process, automatic value generation for 'faulty bottles',<br>embedded program alarm for testing |
+| 2021-07-08  |         | changed parameter "process" (UDInt), added overflow handling, changed HMI docu: added options for operating the PLC, added use case |
+| 2022-01-19  |         | changed PLC to CPU 1513-1, changed unity of energy data to Wh, changed TIA project from .zip to .zap16, added new use cases |
+| 2022-11-24  |         | automatic start of filling process, automatic value generation for 'faulty bottles', embedded program alarm for testing |
 | 2023-04-20  | [V1.0](https://github.com/industrial-edge/miscellaneous/tree/V1.0.0/tank%20application) | added new parameter for batchId, TIA projectInfo and gasConsumption |
-| 2024-06-25  | [V2.0](https://github.com/industrial-edge/miscellaneous/tree/V2.0.0/tank%20application) | migrated the TIA Portal project to V19, added a new Unified Comfort <br>Panel (MTP1500) in the TIA Portal project, new parameters: numberGood, <br>productTypeID, productTypeName, productSerialNumber, productQRCode |
-| 2024-09-26  | V3.0 | added error simulation, adapted error codes, TP900: added visualization <br>for water/gas consumption, alarm with variable content, generate user <br>messages in Diag Buffer |
+| 2024-06-25  | [V2.0](https://github.com/industrial-edge/miscellaneous/tree/V2.0.0/tank%20application) | migrated the TIA Portal project to V19, added a new Unified Comfort Panel (MTP1500) in the TIA Portal project, new parameters: numberGood, productTypeID, productTypeName, productSerialNumber, productQRCode |
+| 2024-09-26  | [V3.0](https://github.com/industrial-edge/miscellaneous/tree/V3.0.0/tank%20application) | added error simulation, adapted error codes, TP900: added visualization for water/gas consumption, alarm with variable content, generate user messages in Diag Buffer |
+| 2025-07-01  | V4.0 | decreased bottle volume to 1l (previous 100l), decreased energy consumption values, updated cycle time, updated product ID (now string), added CIP parameters, simulation of installed pump and renewed heating element, added energy consumptions for standard machine states, error simulation activated per default, HMI fixes |
 
 ### Used components
 
@@ -136,7 +134,11 @@ Parameter "projectInfo"
 
 Parameter "errors"
 
-![GDB parameter projectInfo](graphics/GDB_parameter_errors.png)
+![GDB parameter errors](graphics/GDB_parameter_errors.png)
+
+Parameter "CIP"
+
+![GDB parameter cip](graphics/GDB_parameter_cip.png)
 
 ## Operation of PLC
 
@@ -211,7 +213,6 @@ The tank application can be controlled via self developed Edge apps. Therefore t
 - *GDB.appSignals.APP_Start* (chapter [Manual operation](#manual-operation-intern)))
 - *GDB.appSignals.APP_Stop* (chapter [Manual operation](#manual-operation-intern)))
 - *GDB.appSignals.APP_Reset* (chapter [Manual operation](#manual-operation-intern))
-- *GDB.appSignals.APP_QRCode* (chapter [Manual operation](#qr-code-scanner))
 - *GDB.appSignals.APP_ErrorSimulation* (chapter [Error simulation](#error-simulation))
 - *GDB.appSignals.APP_Error* (chapter [Error simulation](#error-simulation))
 - *GDB.appSignals.APP_Alarm* (chapter [Program alarm](#program-alarm))
@@ -241,7 +242,7 @@ MTP1500:
 The error is available as long as this parameter is set to TRUE. You need to manually reset the error paramter by setting it to FALSE. After each error occurance the machine state goes automatically into STATE_STOP (5).The process can be continued, once you trigger the parameter *GDB.appSignals.APP_Start*.
 
 
-2\) The tank application offers the possibility to **automatically simulate predefined production errors** (unplanned downtimes). The simulation is deactivated by default. To activate the error simulation, this parameter must be set to TRUE:
+2\) The tank application offers the possibility to **automatically simulate predefined production errors** (unplanned downtimes). The simulation is activated by default. To deactivate the error simulation, this parameter must be set to FALSE:
 
  - *GDB.appSignals.APP_ErrorSimulation*
 
@@ -259,21 +260,49 @@ The dedicated parameters can be found under *GDB.errors*:
 
 After each error occurance the machine state goes automatically into STATE_STOP (5).The process can be continued, once you trigger the parameter *GDB.appSignals.APP_Start*.
 
+### Simulate process improvement
+
+It is possible to manually simulate a process improvement which affects the filling behaviour of the machine. To activate the simultion, this parameter must be set to TRUE: 
+
+ - *GDB.hmiSignals.HMI_InstallFillingPump*
+
+ In this case a constant filling pressure is simulated which leads to an improved behaviour when looking at process efficiency values.
+
+ ![ProcessImprovement](graphics/ProcessImprovement.png)
+
+### Simulate energy improvement
+
+It is possible to manually simulate an energy consumption improvement within the filling process. To activate the simultion, this parameter must be set to TRUE: 
+
+ - *GDB.hmiSignals.HMI_RenewHeatingElement*
+
+ In this case the electricity consumption for the tank heating state is reduced (*GDB.signals.energySignals.energyConsumptionHeatingTank*).
+
+ ![EnergyImprovement](graphics/EnergyImprovement.png)
+
+### Energy consumption per machine state
+
+The standard specifies 6 machine states:  
+
+1 = Powering up  
+2 = Powering down  
+3 = Off  
+4 = Standby  
+5 = Operational  
+6 = Working  
+
+This PLC project randomly simulates values for each of them (without any reference to the filling process). These values can be used for the Use Case [Energy Efficiency Monitoring with Industrial Edge](#energy-efficiency-monitoring-with-industrial-edge).
+
+- *GDB.signals.energySignalsPerState.stateId*
+- *GDB.signals.energySignalsPerState.energyConsumptionStatePoweringUp*
+- *GDB.signals.energySignalsPerState.energyConsumptionStatePoweringDown*
+- *GDB.signals.energySignalsPerState.energyConsumptionStateOff*
+- *GDB.signals.energySignalsPerState.energyConsumptionStateStandby*
+- *GDB.signals.energySignalsPerState.energyConsumptionStateOperational*
+- *GDB.signals.energySignalsPerState.energyConsumptionStateWorking*
+- *GDB.signals.energySignalsPerState.energyConsumptionStateTotal*
+
 ## Edge use cases
-
-### QR-Code scanner
-
-The related How To can be found [here](https://github.com/industrial-edge/qr-code-scanner).
-
-The application reads the QR Code provided by the scanner and publishes it on the IE Databus to the topic corresponding to the S7 Connector, which sends the data to the PLC (parameter *APP_QRCode*). If the PLC receives a new QR Code String, the information is displayed in the HMI Panel.
-
-Interface parameter:
-
-- *GDB.appSignals.APP_QRCode*
-
-Example of scanned QR code in HMI:
-
-![QR-Code](graphics/qrcode.png)
 
 ### Archiving and visualization
 
@@ -288,18 +317,6 @@ Interface parameter:
 - *GDB.process.numberProduced*
 - *GDB.process.numberFaulty*
 - *GDB.hmiSignals.HMI_NextBottle*
-
-### Archiving and operation
-
-The related How To can be found [here](https://github.com/industrial-edge/archiving-and-operation).
-
-The Industrial Edge Application "Archiving & Operation" provides a web UI for operating the tank application with push buttons to start, stop and reset the filling process. By pushing the buttons, a http request is sended to the MQTT client of the app and forwarded to the IE Databus. The S7 Connector receives the message and writes the control command to the PLC, that is controlling the tank application.
-
-Interface parameter:
-
-- *GDB.appSignals.APP_Start*
-- *GDB.appSignals.APP_Stop*
-- *GDB.appSignals.APP_Reset*
 
 ### IoT gateway
 
@@ -396,17 +413,27 @@ The related How To can be found [here](https://github.com/industrial-edge/Apache
 
 This example shows how to connect an Industrial Edge Device to Apache Kafka using the self developed app "Apache Kafka Connector". It can subscribe to MQTT topics on the IE Databus and produce messages on a Kafka topic. It can also consume messages from a Kafka topic and publish these to MQTT topics an the IE Databus.
 
-### Data concentrator with Data Service
-
-The related How To can be found [here](https://github.com/industrial-edge/data-concentrator-data-service).
-
-This example shows how to centrally send data from the field level (several edge devices) to a higher-level edge device. Therefore two edge devices forward their data via the Cloud Connector (local lake) to a higher-level edge decice. This central edge device uses the Data Service custom adapters to collect the data from the field level and analyze it via Performance Insight.
-
 ### Notifier API
 
 The related How To can be found [here](https://github.com/industrial-edge/notifier-api).
 
 This guide shows how to use the Notifier OpenAPI in different ways. The API is implemented within an user-developed app to send notifications to the Notifier.
+
+## Energy Efficiency Monitoring with Industrial Edge
+
+Summarized energy values for a machine are delivered via one PLC parameter:
+
+*GDB.signals.energySignalsPerState.energyConsumptionStateTotal*
+
+The dedicated machine state is also delivered via a PLC parameter:
+
+*GDB.signals.energySignalsPerState.stateId*
+
+Within IIH Essentials, a transformation function is used: Depending on the machine state, the energy value is written to a dedicated IIH variable (a separate variable for each state).
+
+Finally, these status variables will be shown in an overview dashboard within Energy Manager:
+
+![EE Monitoring](graphics/EE_Monitoring.png)
 
 ## Contribution
 
