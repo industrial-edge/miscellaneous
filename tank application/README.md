@@ -213,7 +213,6 @@ The tank application can be controlled via self developed Edge apps. Therefore t
 - *GDB.appSignals.APP_Start* (chapter [Manual operation](#manual-operation-intern)))
 - *GDB.appSignals.APP_Stop* (chapter [Manual operation](#manual-operation-intern)))
 - *GDB.appSignals.APP_Reset* (chapter [Manual operation](#manual-operation-intern))
-- *GDB.appSignals.APP_QRCode* (chapter [Manual operation](#qr-code-scanner))
 - *GDB.appSignals.APP_ErrorSimulation* (chapter [Error simulation](#error-simulation))
 - *GDB.appSignals.APP_Error* (chapter [Error simulation](#error-simulation))
 - *GDB.appSignals.APP_Alarm* (chapter [Program alarm](#program-alarm))
