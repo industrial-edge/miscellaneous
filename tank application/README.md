@@ -19,9 +19,7 @@ This is the documentation for the TIA Portal project "tank application", which s
     - [Program alarm](#program-alarm)
     - [Error simulation](#error-simulation)
   - [Edge use cases](#edge-use-cases)
-    - [QR-Code scanner](#qr-code-scanner)
     - [Archiving and visualization](#archiving-and-visualization)
-    - [Archiving and operation](#archiving-and-operation)
     - [IoT gateway](#iot-gateway)
     - [Data service - Getting started](#data-service---getting-started)
     - [Notifier - Getting started](#notifier---getting-started)
@@ -31,7 +29,6 @@ This is the documentation for the TIA Portal project "tank application", which s
     - [Machine insight - Getting started](#machine-insight---getting-started)
     - [Profinet IO connector - Getting started](#profinet-io-connector---getting-started)
     - [Apache Kafka Connector](#apache-kafka-connector)
-    - [Data concentrator with Data Service](#data-concentrator-with-data-service)
     - [Notifier API](#notifier-api)
   - [Contribution](#contribution)
 
@@ -49,7 +46,7 @@ The TIA Portal project can be found [here](tia-tank-application.zap19) as zap19 
 
 ### History
 
-| Date &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Version | Note |
+| <br>Date &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Version | Note |
 | ------------| ------- | -------------- |
 | 2021-05-20  |         | first version  |
 | 2021-06-09  |         | changed parameter "process" (Int > DInt) |
@@ -308,20 +305,6 @@ This PLC project randomly simulates values for each of them (without any referen
 
 ## Edge use cases
 
-### QR-Code scanner
-
-The related How To can be found [here](https://github.com/industrial-edge/qr-code-scanner).
-
-The application reads the QR Code provided by the scanner and publishes it on the IE Databus to the topic corresponding to the S7 Connector, which sends the data to the PLC (parameter *APP_QRCode*). If the PLC receives a new QR Code String, the information is displayed in the HMI Panel.
-
-Interface parameter:
-
-- *GDB.appSignals.APP_QRCode*
-
-Example of scanned QR code in HMI:
-
-![QR-Code](graphics/qrcode.png)
-
 ### Archiving and visualization
 
 The related How To can be found [here](https://github.com/industrial-edge/archiving-and-visualization).
@@ -335,18 +318,6 @@ Interface parameter:
 - *GDB.process.numberProduced*
 - *GDB.process.numberFaulty*
 - *GDB.hmiSignals.HMI_NextBottle*
-
-### Archiving and operation
-
-The related How To can be found [here](https://github.com/industrial-edge/archiving-and-operation).
-
-The Industrial Edge Application "Archiving & Operation" provides a web UI for operating the tank application with push buttons to start, stop and reset the filling process. By pushing the buttons, a http request is sended to the MQTT client of the app and forwarded to the IE Databus. The S7 Connector receives the message and writes the control command to the PLC, that is controlling the tank application.
-
-Interface parameter:
-
-- *GDB.appSignals.APP_Start*
-- *GDB.appSignals.APP_Stop*
-- *GDB.appSignals.APP_Reset*
 
 ### IoT gateway
 
@@ -442,12 +413,6 @@ This example shows how to use the Industrial Edge App â€œPROFINET IO Connectorâ€
 The related How To can be found [here](https://github.com/industrial-edge/Apache-Kafka-Connector).
 
 This example shows how to connect an Industrial Edge Device to Apache Kafka using the self developed app "Apache Kafka Connector". It can subscribe to MQTT topics on the IE Databus and produce messages on a Kafka topic. It can also consume messages from a Kafka topic and publish these to MQTT topics an the IE Databus.
-
-### Data concentrator with Data Service
-
-The related How To can be found [here](https://github.com/industrial-edge/data-concentrator-data-service).
-
-This example shows how to centrally send data from the field level (several edge devices) to a higher-level edge device. Therefore two edge devices forward their data via the Cloud Connector (local lake) to a higher-level edge decice. This central edge device uses the Data Service custom adapters to collect the data from the field level and analyze it via Performance Insight.
 
 ### Notifier API
 
