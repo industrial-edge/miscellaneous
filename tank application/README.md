@@ -81,6 +81,13 @@ The CPU contains the engineering program for the whole tank application. It also
 
 ![TIA Overview](graphics/TIA_Overview.png)
 
+## Engineering with Edge
+
+The TIA Portal project consists of a CPU 1517V-1 PN, a T900 Comfort panel and a SIMATIC PC station, more precisely the WinCC Unified Edge RT.
+
+The instructions on how to set up a vPLC on Edge can be found on this other [example](https://github.com/industrial-edge/S7-1500V-getting-started)
+
+![TIA Overview](graphics/TIA_Edge_Overview.png)
 ### Mode of operation
 
 The application works as following:
@@ -206,6 +213,23 @@ To simulate some faulty products and increase the number of "bottles faulty", th
 It is also possible to simulate an error, which stops the whole filling process. In this case the parameter *GDB.operate.machineState* is set to *STATE_ERROR* (7). Therefore this parameter must be set to TRUE. The process can be started again, once the paramter was reset to FALSE:
 
 - *GDB.hmiSignals.HMI_Error*
+
+### Operation via Edge Device (extern)
+
+To visualize the TIA project on an Edge Device, the WinCC Unified Runtime must be installed on the device. The app can be adquired on the Industrial Edge Hub to download it to your IEM
+
+![](graphics/WinCC_app.png)
+
+In order to visualize the project on the Runtime, the Ethernet address on the SIMATIC PC station must be the Edge Device's IP address. This can be changed under Device configuration of the SIMATIC PC station, under PRofinet interface>Ethernet address
+
+![](graphics/Runtime_IP.png)
+
+Once the app is downloaded to the device and the program has been complied and downloaded both on the vPLC and the WinCC Unified Edge RT, the Runtime Manager can be used to visualize the project. When openig the app, it open the user login page. The credential from the created user are Username:edge, Password:Tank4Edge! 
+
+![](graphics/user_login.png)
+
+To start the runtime, the project must be running and the select the WinCC Unified Runtime button. Once started, the screens and use of it are the same as the processes described previously.
+![](graphics/edge_screen.png)
 
 ### Operation via Edge Apps (extern)
 
