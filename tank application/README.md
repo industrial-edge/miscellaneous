@@ -42,7 +42,8 @@ This application is used within various use cases to demonstrate the Industrial 
 
 ### Source files
 
-The TIA Portal project can be found [here](tia-tank-application.zap19) as zap19 file (TIA compressed project) and can be opened directly in the TIA Portal V19 or higher.
+The TIA Portal project using HMIs can be found [here](tia-tank-application.zap19) as zap19 file (TIA compressed project) and can be opened directly in the TIA Portal V19 or higher.
+The TIA Portal project using the WinCC Runtimme on an Edge device can be found [here](tia-tank-application.for-edge.ap21) as ap21 file (TIA compressed project) and can be opened directly in the TIA Portal V21 or higher.
 
 ### History
 
